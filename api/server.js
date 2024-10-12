@@ -4,7 +4,6 @@ import fetch from 'node-fetch';
 import serverless from 'serverless-http';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
@@ -17,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 // Route to fetch conversation from external API
-app.get('https://timmy-io-smd-create-smd-creates-projects.vercel.app', async (req, res) => {
+app.get('/conversation', async (req, res) => {
   try {
     const apiUrl = 'https://chateasy.logbase.io/api/conversation?id=cdb63a0953cd227918b86be96d56f60d42993f5ff8de771d38adba7cfc1f74ed&storeId=timmy-demo.myshopify.com';
 
@@ -28,6 +27,7 @@ app.get('https://timmy-io-smd-create-smd-creates-projects.vercel.app', async (re
       return res.status(500).json({ error: 'No conversation found' });
     }
 
+    // Process and format the conversation messages
     const allMessages = data.conversation.map(item => item.messages || []);
     const flattenedMessages = allMessages.flatMap(item => item);
     const formattedMessages = flattenedMessages.map(message => {
@@ -51,12 +51,12 @@ app.get('https://timmy-io-smd-create-smd-creates-projects.vercel.app', async (re
         };
       } else {
         const formattedMessage = message.message
-          .replace(/<\/?[^>]+(>|$)/g, '')
+          .replace(/<\/?[^>]+(>|$)/g, '')  // Remove HTML tags
           .replace(/&quot;/g, '"')
           .replace(/&#39;/g, "'")
           .replace(/\ \"/g, ' ')
           .replace(/\"/g, '')
-          .replace(/\n/g, ' ');
+          .replace(/\n/g, ' ');  // Remove newlines
 
         return {
           type: 'text',
@@ -73,13 +73,6 @@ app.get('https://timmy-io-smd-create-smd-creates-projects.vercel.app', async (re
   }
 });
 
-// Export the app as a serverless function
+// Export the app as a serverless function for Vercel
 export default app;
 export const handler = serverless(app);
-
-// Run locally if not in production (optional)
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-}

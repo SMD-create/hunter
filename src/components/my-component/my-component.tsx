@@ -1,8 +1,8 @@
 import { Component, State, h } from '@stencil/core';
 
 interface ChatMessage {
-  type: string; // e.g., 'text' or 'card'
-  content: any; // can be a string for text or an object for cards
+  type: string; // 'text', 'card', 'image', etc.
+  content: any; // Can be string for text or an object for cards
   isAIReply?: boolean; // Optional property to indicate if the message is from AI
 }
 
@@ -16,18 +16,24 @@ export class MyComponent {
    * Backend chat messages
    */
   @State() chatMessages: ChatMessage[] = [];
+  @State() isLoading: boolean = true; // Loading state
+  @State() errorMessage: string | null = null; // Error state
 
   async componentWillLoad() {
     try {
-      const response = await fetch('https://timmy-io-smd-create-smd-creates-projects.vercel.app'); 
+      const response = await fetch('https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation'); // Correct API endpoint
       if (response.ok) {
         const data = await response.json();
-        this.chatMessages = data.chat; // Assuming the response structure is compatible
+        this.chatMessages = data.chat || []; // Safeguard in case `chat` is undefined
       } else {
         console.error('Error fetching chat messages');
+        this.errorMessage = 'Failed to load chat messages.';
       }
     } catch (error) {
       console.error('Error:', error);
+      this.errorMessage = 'Error fetching chat messages.';
+    } finally {
+      this.isLoading = false; // End loading state
     }
   }
 
@@ -35,8 +41,13 @@ export class MyComponent {
     return (
       <div class="chat-container">
         <div class="chat-header">Timmy AI</div>
+
         <div class="chat-messages">
-          {this.chatMessages &&
+          {this.isLoading ? (
+            <div class="loading">Loading messages...</div>
+          ) : this.errorMessage ? (
+            <div class="error">{this.errorMessage}</div>
+          ) : (
             this.chatMessages.map((msg, index) => {
               if (msg.type === 'text') {
                 return (
@@ -47,17 +58,26 @@ export class MyComponent {
               } else if (msg.type === 'card') {
                 return (
                   <div class="chat-card" key={index}>
-                    <h4>{msg.content.title.text}</h4>
-                    <img src={msg.content.imageUrl} alt={msg.content.title.text} />
+                    <h4>{msg.content.title}</h4> {/* Ensure correct structure */}
+                    <img src={msg.content.imageUrl} alt={msg.content.title} />
                     <a href={msg.content.productUrl} target="_blank" rel="noopener noreferrer">
                       View Product
                     </a>
                   </div>
                 );
+              } else if (msg.type === 'image') {
+                return (
+                  <div class="chat-message" key={index}>
+                    <img src={msg.content} alt="Image message" />
+                  </div>
+                );
               }
               return null; // In case of unrecognized message type
-            })}
+            })
+          )}
         </div>
+
+        {/* Optional input area for future chat interactions */}
         {/*<div class="chat-input-container">
           <input type="text" class="chat-input" placeholder="Type your message..." />
           <button class="send-button">Send</button>
