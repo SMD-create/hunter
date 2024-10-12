@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 });
 
 // Route to fetch conversation from external API
-app.get('/api/fetch-conversation', async (req, res) => {
+app.get('https://timmy-io-smd-create-smd-creates-projects.vercel.app', async (req, res) => {
   try {
     const apiUrl = 'https://chateasy.logbase.io/api/conversation?id=cdb63a0953cd227918b86be96d56f60d42993f5ff8de771d38adba7cfc1f74ed&storeId=timmy-demo.myshopify.com';
 
