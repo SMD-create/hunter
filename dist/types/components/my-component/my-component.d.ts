@@ -4,10 +4,9 @@ interface ChatMessage {
     isAIReply?: boolean;
 }
 export declare class MyComponent {
-    /**
-     * Backend chat messages
-     */
     chatMessages: ChatMessage[];
+    isLoading: boolean;
+    errorMessage: string | null;
     componentWillLoad(): Promise<void>;
     render(): any;
 }

@@ -6,33 +6,42 @@ const MyComponent = class {
     constructor(hostRef) {
         registerInstance(this, hostRef);
         this.chatMessages = [];
+        this.isLoading = true;
+        this.errorMessage = null;
     }
     async componentWillLoad() {
         try {
-            const response = await fetch('https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/fetch-conversation');
+            const response = await fetch('http://localhost:3000/api/conversation'); // Fetch from local backend
             if (response.ok) {
                 const data = await response.json();
-                this.chatMessages = data.chat; // Assuming the response structure is compatible
+                this.chatMessages = data.chat || []; // Safeguard in case `chat` is undefined
             }
             else {
                 console.error('Error fetching chat messages');
+                this.errorMessage = 'Failed to load chat messages.';
             }
         }
         catch (error) {
             console.error('Error:', error);
+            this.errorMessage = 'Error fetching chat messages.';
+        }
+        finally {
+            this.isLoading = false; // End loading state
         }
     }
     render() {
-        return (h("div", { key: '900d832902d246a923f6082786bd41bd92ba4143', class: "chat-container" }, h("div", { key: '361524a81f583cc9b891e50c18758e2760afae26', class: "chat-header" }, "Timmy AI"), h("div", { key: '8830832fdc4fcc3acdb430723e6a9dc3371e566c', class: "chat-messages" }, this.chatMessages &&
-            this.chatMessages.map((msg, index) => {
-                if (msg.type === 'text') {
-                    return (h("div", { class: `chat-message ${msg.isAIReply ? 'ai' : 'user'}`, key: index }, msg.content));
-                }
-                else if (msg.type === 'card') {
-                    return (h("div", { class: "chat-card", key: index }, h("h4", null, msg.content.title.text), h("img", { src: msg.content.imageUrl, alt: msg.content.title.text }), h("a", { href: msg.content.productUrl, target: "_blank", rel: "noopener noreferrer" }, "View Product")));
-                }
-                return null; // In case of unrecognized message type
-            }))));
+        return (h("div", { key: '882bfb502d74ccbdb9210a14ad2d14e76c6a970a', class: "chat-container" }, h("div", { key: '85f37fb53ff5a404cae16904bdbe0c2d2c190b36', class: "chat-header" }, "Timmy AI"), h("div", { key: '3da51ea1b898ebbaaefbe27dd2fbf3172e200395', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.chatMessages.map((msg, index) => {
+            if (msg.type === 'text') {
+                return (h("div", { class: `chat-message ${msg.isAIReply ? 'ai' : 'user'}`, key: index }, msg.content));
+            }
+            else if (msg.type === 'card') {
+                return (h("div", { class: "chat-card", key: index }, h("h4", null, msg.content.title), " ", h("img", { src: msg.content.imageUrl, alt: msg.content.title }), h("a", { href: msg.content.productUrl, target: "_blank", rel: "noopener noreferrer" }, "View Product")));
+            }
+            else if (msg.type === 'image') {
+                return (h("div", { class: "chat-message", key: index }, h("img", { src: msg.content, alt: "Image message" })));
+            }
+            return null; // In case of unrecognized message type
+        })))));
     }
 };
 MyComponent.style = myComponentCss;

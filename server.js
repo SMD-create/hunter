@@ -1,9 +1,11 @@
+// server.js
 import express from 'express';
 import cors from 'cors';
 import fetch from 'node-fetch';
 import serverless from 'serverless-http';
 
 const app = express();
+const PORT = process.env.PORT || 3000; // Make sure the port is set to 3000
 
 // Middleware
 app.use(cors({
@@ -16,7 +18,7 @@ app.get('/', (req, res) => {
 });
 
 // Route to fetch conversation from external API
-app.get('/conversation', async (req, res) => {
+app.get('/api/conversation', async (req, res) => { // Updated the route to include /api
   try {
     const apiUrl = 'https://chateasy.logbase.io/api/conversation?id=cdb63a0953cd227918b86be96d56f60d42993f5ff8de771d38adba7cfc1f74ed&storeId=timmy-demo.myshopify.com';
 
@@ -73,6 +75,11 @@ app.get('/conversation', async (req, res) => {
   }
 });
 
-// Export the app as a serverless function for Vercel
-export default app;
+// Run the server locally
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+// Export the app as a serverless function for Vercel (optional, if deploying)
+export default app; 
 export const handler = serverless(app);

@@ -43,7 +43,7 @@ var patchCloneNodeFix = (HTMLElementPrototype) => {
 
 patchBrowser().then(async (options) => {
   await globalScripts();
-  return bootstrapLazy([["my-component",[[1,"my-component",{"chatMessages":[32]}]]]], options);
+  return bootstrapLazy([["my-component",[[1,"my-component",{"chatMessages":[32],"isLoading":[32],"errorMessage":[32]}]]]], options);
 });
 
 //# sourceMappingURL=botty.esm.js.map

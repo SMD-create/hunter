@@ -1,3 +1,4 @@
+// my-component.tsx
 import { Component, State, h } from '@stencil/core';
 
 interface ChatMessage {
@@ -12,16 +13,13 @@ interface ChatMessage {
   shadow: true,
 })
 export class MyComponent {
-  /**
-   * Backend chat messages
-   */
   @State() chatMessages: ChatMessage[] = [];
   @State() isLoading: boolean = true; // Loading state
   @State() errorMessage: string | null = null; // Error state
 
   async componentWillLoad() {
     try {
-      const response = await fetch('https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation'); // Correct API endpoint
+      const response = await fetch('http://localhost:3000/api/conversation'); // Fetch from local backend
       if (response.ok) {
         const data = await response.json();
         this.chatMessages = data.chat || []; // Safeguard in case `chat` is undefined
