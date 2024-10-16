@@ -1,0 +1,1 @@
+import{p as r,b as a}from"./p-554140d8.js";export{s as setNonce}from"./p-554140d8.js";import{g as e}from"./p-e1255160.js";var o=()=>{const s=import.meta.url;const a={};if(s!==""){a.resourcesUrl=new URL(".",s).href}return r(a)};o().then((async s=>{await e();return a([["p-8508a544",[[1,"my-component",{chatMessages:[32],isLoading:[32],errorMessage:[32]}]]]],s)}));

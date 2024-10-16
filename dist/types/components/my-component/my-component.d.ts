@@ -9,5 +9,6 @@ export declare class MyComponent {
     errorMessage: string | null;
     componentWillLoad(): Promise<void>;
     render(): any;
+    private renderChatMessages;
 }
 export {};

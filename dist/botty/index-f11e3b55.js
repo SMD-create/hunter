@@ -3,7 +3,7 @@ const BUILD = /* botty */ { allRenderFn: true, appendChildSlotFix: false, asyncL
 const Env = /* botty */ {};
 
 /*
- Stencil Client Platform v4.21.0 | MIT Licensed | https://stenciljs.com
+ Stencil Client Platform v4.22.1 | MIT Licensed | https://stenciljs.com
  */
 var __defProp = Object.defineProperty;
 var __export = (target, all) => {
@@ -97,6 +97,12 @@ var HYDRATE_ID = "s-id";
 var HYDRATED_STYLE_ID = "sty-id";
 var HYDRATE_CHILD_ID = "c-id";
 var HYDRATED_CSS = "{visibility:hidden}.hydrated{visibility:inherit}";
+var STENCIL_DOC_DATA = "_stencilDocData";
+var DEFAULT_DOC_DATA = {
+  hostIds: 0,
+  rootLevelIds: 0,
+  staticComponents: /* @__PURE__ */ new Set()
+};
 var SLOT_FB_CSS = "slot-fb{display:contents}slot-fb[hidden]{display:none}";
 var XLINK_NS = "http://www.w3.org/1999/xlink";
 var FORM_ASSOCIATED_CUSTOM_ELEMENT_CALLBACKS = [
@@ -798,10 +804,15 @@ var addStyle = (styleContainerNode, cmpMeta, mode) => {
           if (!(cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */)) {
             if (styleContainerNode.nodeName === "HEAD") {
               const preconnectLinks = styleContainerNode.querySelectorAll("link[rel=preconnect]");
-              const referenceNode2 = preconnectLinks.length > 0 ? preconnectLinks[preconnectLinks.length - 1].nextSibling : document.querySelector("style");
+              const referenceNode2 = preconnectLinks.length > 0 ? preconnectLinks[preconnectLinks.length - 1].nextSibling : styleContainerNode.querySelector("style");
               styleContainerNode.insertBefore(styleElm, referenceNode2);
             } else if ("host" in styleContainerNode) {
-              styleContainerNode.prepend(styleElm);
+              const existingStyleContainer = styleContainerNode.querySelector("style");
+              if (existingStyleContainer) {
+                existingStyleContainer.innerHTML = style + existingStyleContainer.innerHTML;
+              } else {
+                styleContainerNode.prepend(styleElm);
+              }
             } else {
               styleContainerNode.append(styleElm);
             }
@@ -2280,6 +2291,11 @@ var patchSlotAppendChild = (HostElementPrototype) => {
     const slotName = newChild["s-sn"] = getSlotName(newChild);
     const slotNode = getHostSlotNode(this.childNodes, slotName, this.tagName);
     if (slotNode) {
+      const slotPlaceholder = document.createTextNode("");
+      slotPlaceholder["s-nr"] = newChild;
+      slotNode["s-cr"].parentNode.__appendChild(slotPlaceholder);
+      newChild["s-ol"] = slotPlaceholder;
+      newChild["s-sh"] = slotNode["s-hn"];
       const slotChildNodes = getHostSlotChildNodes(slotNode, slotName);
       const appendAfter = slotChildNodes[slotChildNodes.length - 1];
       const insertedNode = insertBefore(appendAfter.parentNode, newChild, appendAfter.nextSibling);
@@ -2321,6 +2337,7 @@ var patchSlotPrepend = (HostElementPrototype) => {
         slotPlaceholder["s-nr"] = newChild;
         slotNode["s-cr"].parentNode.__appendChild(slotPlaceholder);
         newChild["s-ol"] = slotPlaceholder;
+        newChild["s-sh"] = slotNode["s-hn"];
         const slotChildNodes = getHostSlotChildNodes(slotNode, slotName);
         const appendAfter = slotChildNodes[0];
         return insertBefore(appendAfter.parentNode, newChild, appendAfter.nextSibling);
@@ -2879,11 +2896,8 @@ var setPlatformOptions = (opts) => Object.assign(plt, opts);
 // src/runtime/vdom/vdom-annotations.ts
 var insertVdomAnnotations = (doc2, staticComponents) => {
   if (doc2 != null) {
-    const docData = {
-      hostIds: 0,
-      rootLevelIds: 0,
-      staticComponents: new Set(staticComponents)
-    };
+    const docData = STENCIL_DOC_DATA in doc2 ? doc2[STENCIL_DOC_DATA] : { ...DEFAULT_DOC_DATA };
+    docData.staticComponents = new Set(staticComponents);
     const orgLocationNodes = [];
     parseVNodeAnnotations(doc2, doc2.body, docData, orgLocationNodes);
     orgLocationNodes.forEach((orgLocationNode) => {
@@ -3016,4 +3030,4 @@ var insertChildVNodeAnnotations = (doc2, vnodeChild, cmpData, hostId, depth, ind
 
 export { BUILD as B, H, NAMESPACE as N, bootstrapLazy as b, consoleDevInfo as c, doc as d, h, promiseResolve as p, registerInstance as r, setNonce as s };
 
-//# sourceMappingURL=index-6d35b1bc.js.map
+//# sourceMappingURL=index-f11e3b55.js.map

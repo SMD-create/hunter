@@ -1,7 +1,8 @@
-import { r as registerInstance, h } from './index-6d35b1bc.js';
+import { h, r as registerInstance } from './index-f11e3b55.js';
 
-const myComponentCss = ":host{display:flex;justify-content:center;align-items:center;font-family:'Helvetica Neue', Arial, sans-serif;width:100vw;height:100vh;margin:0;background-color:#f0f2f5;box-shadow:0 4px 15px rgba(0, 0, 0, 0.1)}.chat-container{display:flex;flex-direction:column;width:900px;height:620px;background-color:#ffffff;border-radius:15px;overflow:hidden;box-shadow:0 6px 20px rgba(0, 0, 0, 0.15);}.chat-header{background:linear-gradient(45deg, #007bff, #0056b3);color:white;text-align:center;padding:15px;font-size:1.5em;font-weight:bold}.chat-messages{flex:1;padding:20px;overflow-y:auto;background-color:#f9f9f9;display:flex;flex-direction:column;gap:10px;}.chat-message{padding:15px;border-radius:12px;max-width:80%;position:relative;font-size:1em;line-height:1.4;box-shadow:0 3px 10px rgba(0, 0, 0, 0.1);}.chat-message.ai{background-color:#e1f5fe;align-self:flex-start;border:1px solid #b3e5fc}.chat-message.user{background-color:#d1e7dd;align-self:flex-end;border:1px solid #a3d5c3}.chat-card{padding:15px;border-radius:12px;background-color:#ffffff;border:1px solid #e0e0e0;width:100%;box-shadow:0 3px 10px rgba(0, 0, 0, 0.05);display:flex;flex-direction:column;align-items:center;transition:transform 0.3s, box-shadow 0.3s;}.chat-card:hover{transform:translateY(-5px);box-shadow:0 6px 20px rgba(0, 0, 0, 0.15)}.chat-card img{max-width:100%;border-radius:10px;margin:10px 0}.chat-card h4{margin:10px 0;font-size:1.2em;font-weight:600;color:#333;}.chat-card a{margin-top:10px;padding:8px 16px;background-color:#007bff;color:white;border-radius:8px;text-decoration:none;font-weight:bold;transition:background-color 0.3s}.chat-card a:hover{background-color:#0056b3}.chat-input-container{display:flex;border-top:1px solid #ddd;padding:15px;background-color:#ffffff}.chat-input{flex:1;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:1em;transition:border-color 0.3s}.chat-input:focus{border-color:#007bff;outline:none}.send-button{margin-left:10px;padding:12px 24px;background-color:#007bff;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1em;font-weight:bold;transition:background-color 0.3s, transform 0.3s}.send-button:hover{background-color:#0056b3;transform:translateY(-2px);}";
+const myComponentCss = ":host{display:flex;justify-content:center;align-items:center;font-family:'Helvetica Neue', Arial, sans-serif;width:100vw;height:100vh;margin:0;background-color:#f0f2f5}.chat-container{display:flex;flex-direction:column;width:90%;max-width:900px;height:80%;max-height:620px;background-color:#ffffff;border-radius:15px;overflow:hidden;box-shadow:0 6px 20px rgba(0, 0, 0, 0.15)}.chat-header{background:linear-gradient(45deg, #007bff, #0056b3);color:white;text-align:center;padding:15px;font-size:1.5em;font-weight:bold}.chat-messages{flex:1;padding:20px;overflow-y:auto;background-color:#f9f9f9;display:flex;flex-direction:column;gap:10px}.chat-message{padding:15px;border-radius:12px;max-width:80%;position:relative;font-size:1em;line-height:1.4;box-shadow:0 3px 10px rgba(0, 0, 0, 0.1)}.chat-message.ai{background-color:#e1f5fe;align-self:flex-start;border:1px solid #b3e5fc}.chat-message.user{background-color:#d1e7dd;align-self:flex-end;border:1px solid #a3d5c3}.chat-card-group{display:flex;flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:15px;padding:10px;background-color:#ffffff;border:1px solid #ddd;min-height:380px;max-height:380px;box-sizing:border-box}.chat-card-group::-webkit-scrollbar{height:8px}.chat-card-group::-webkit-scrollbar-thumb{background-color:#007bff;border-radius:4px}.chat-card{width:345px;height:350px;min-width:250px;min-height:300px;border-radius:8px;background-color:#ffffff;border:1px solid #e0e0e0;box-shadow:0 3px 10px rgba(0, 0, 0, 0.05);display:flex;flex-direction:column;align-items:center;transition:transform 0.3s, box-shadow 0.3s}.chat-card:hover{transform:translateY(-5px);box-shadow:0 6px 20px rgba(0, 0, 0, 0.15)}.chat-card img{max-width:100%;height:auto;border-radius:6px;margin:5px 0;object-fit:contain}.chat-card h4{margin:5px 0;font-size:0.9em;font-weight:600;color:#333;text-align:center}.chat-card a{margin-top:5px;padding:6px 12px;background-color:#007bff;color:white;border-radius:6px;text-decoration:none;font-size:0.9em;font-weight:bold}.chat-card a:hover{background-color:#0056b3}";
 
+h("link", { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" });
 const MyComponent = class {
     constructor(hostRef) {
         registerInstance(this, hostRef);
@@ -11,37 +12,59 @@ const MyComponent = class {
     }
     async componentWillLoad() {
         try {
-            const response = await fetch('http://localhost:3000/api/conversation'); // Fetch from local backend
+            const response = await fetch("https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation");
             if (response.ok) {
                 const data = await response.json();
                 this.chatMessages = data.chat || []; // Safeguard in case `chat` is undefined
             }
             else {
-                console.error('Error fetching chat messages');
-                this.errorMessage = 'Failed to load chat messages.';
+                console.error("Error fetching chat messages");
+                this.errorMessage = "Failed to load chat messages.";
             }
         }
         catch (error) {
-            console.error('Error:', error);
-            this.errorMessage = 'Error fetching chat messages.';
+            console.error("Error:", error);
+            this.errorMessage = "Error fetching chat messages.";
         }
         finally {
             this.isLoading = false; // End loading state
         }
     }
     render() {
-        return (h("div", { key: '882bfb502d74ccbdb9210a14ad2d14e76c6a970a', class: "chat-container" }, h("div", { key: '85f37fb53ff5a404cae16904bdbe0c2d2c190b36', class: "chat-header" }, "Timmy AI"), h("div", { key: '3da51ea1b898ebbaaefbe27dd2fbf3172e200395', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.chatMessages.map((msg, index) => {
-            if (msg.type === 'text') {
-                return (h("div", { class: `chat-message ${msg.isAIReply ? 'ai' : 'user'}`, key: index }, msg.content));
+        return (h("div", { key: 'c54735319e0d72fb30c4498914bff08725bbd001', class: "chat-container" }, h("div", { key: '00d11261cd94cbcba409bbff4ff6c0eb426e0ca8', class: "chat-header" }, "Timmy AI"), h("div", { key: 'b1f628f95e582df189a13c9b1d50bae9c243d5bd', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages())), h("script", { key: 'ca6d27592ae728d6a2367931148368b0b63df035', src: "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" })));
+    }
+    renderChatMessages() {
+        const messageGroups = [];
+        let isGrouping = false;
+        let group = [];
+        this.chatMessages.forEach((msg, index) => {
+            if (msg.type === "card") {
+                if (!isGrouping) {
+                    // Start grouping if the first card is encountered
+                    isGrouping = true;
+                    group = [];
+                }
+                group.push(h("div", { class: "chat-card", key: `card-${index}` }, h("h4", null, msg.content.title.text), h("img", { src: msg.content.imageUrl, alt: msg.content.title.text }), h("a", { href: msg.content.productUrl, target: "_blank", rel: "noopener noreferrer" }, "View Product")));
             }
-            else if (msg.type === 'card') {
-                return (h("div", { class: "chat-card", key: index }, h("h4", null, msg.content.title), " ", h("img", { src: msg.content.imageUrl, alt: msg.content.title }), h("a", { href: msg.content.productUrl, target: "_blank", rel: "noopener noreferrer" }, "View Product")));
+            else if (msg.type === "text" || msg.type === "image") {
+                if (isGrouping) {
+                    // Stop grouping if a text or image message is encountered
+                    messageGroups.push(h("div", { class: "chat-card-group", key: `group-${messageGroups.length}` }, group));
+                    isGrouping = false; // Reset grouping status
+                }
+                if (msg.type === "text") {
+                    messageGroups.push(h("div", { class: `chat-message ${msg.isAIReply ? "ai" : "user"}`, key: `text-${index}` }, msg.content));
+                }
+                else if (msg.type === "image") {
+                    messageGroups.push(h("div", { class: "chat-message", key: `image-${index}` }, h("img", { src: msg.content, alt: "Image message" })));
+                }
             }
-            else if (msg.type === 'image') {
-                return (h("div", { class: "chat-message", key: index }, h("img", { src: msg.content, alt: "Image message" })));
-            }
-            return null; // In case of unrecognized message type
-        })))));
+        });
+        // Add any remaining grouped cards if the loop ended while still grouping
+        if (isGrouping) {
+            messageGroups.push(h("div", { class: "chat-card-group swiper", key: `group-${messageGroups.length}` }, group));
+        }
+        return messageGroups;
     }
 };
 MyComponent.style = myComponentCss;

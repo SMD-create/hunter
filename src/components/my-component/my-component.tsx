@@ -1,5 +1,10 @@
-// my-component.tsx
-import { Component, State, h } from '@stencil/core';
+import { Component, JSX, State, h } from "@stencil/core";
+import Swiper from 'swiper';
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+/>
 
 interface ChatMessage {
   type: string; // 'text', 'card', 'image', etc.
@@ -8,8 +13,8 @@ interface ChatMessage {
 }
 
 @Component({
-  tag: 'my-component',
-  styleUrl: 'my-component.css',
+  tag: "my-component",
+  styleUrl: "my-component.css",
   shadow: true,
 })
 export class MyComponent {
@@ -19,17 +24,20 @@ export class MyComponent {
 
   async componentWillLoad() {
     try {
-      const response = await fetch('http://localhost:3000/api/conversation'); // Fetch from local backend
+      const response = await fetch(
+        "https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation"
+      );
+
       if (response.ok) {
         const data = await response.json();
         this.chatMessages = data.chat || []; // Safeguard in case `chat` is undefined
       } else {
-        console.error('Error fetching chat messages');
-        this.errorMessage = 'Failed to load chat messages.';
+        console.error("Error fetching chat messages");
+        this.errorMessage = "Failed to load chat messages.";
       }
     } catch (error) {
-      console.error('Error:', error);
-      this.errorMessage = 'Error fetching chat messages.';
+      console.error("Error:", error);
+      this.errorMessage = "Error fetching chat messages.";
     } finally {
       this.isLoading = false; // End loading state
     }
@@ -46,41 +54,81 @@ export class MyComponent {
           ) : this.errorMessage ? (
             <div class="error">{this.errorMessage}</div>
           ) : (
-            this.chatMessages.map((msg, index) => {
-              if (msg.type === 'text') {
-                return (
-                  <div class={`chat-message ${msg.isAIReply ? 'ai' : 'user'}`} key={index}>
-                    {msg.content}
-                  </div>
-                );
-              } else if (msg.type === 'card') {
-                return (
-                  <div class="chat-card" key={index}>
-                    <h4>{msg.content.title}</h4> {/* Ensure correct structure */}
-                    <img src={msg.content.imageUrl} alt={msg.content.title} />
-                    <a href={msg.content.productUrl} target="_blank" rel="noopener noreferrer">
-                      View Product
-                    </a>
-                  </div>
-                );
-              } else if (msg.type === 'image') {
-                return (
-                  <div class="chat-message" key={index}>
-                    <img src={msg.content} alt="Image message" />
-                  </div>
-                );
-              }
-              return null; // In case of unrecognized message type
-            })
+            this.renderChatMessages()
           )}
         </div>
-
-        {/* Optional input area for future chat interactions */}
-        {/*<div class="chat-input-container">
-          <input type="text" class="chat-input" placeholder="Type your message..." />
-          <button class="send-button">Send</button>
-        </div>*/}
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
       </div>
     );
+  }
+
+  private renderChatMessages() {
+    const messageGroups: JSX.Element[] = [];
+    let isGrouping = false;
+    let group: JSX.Element[] = [];
+
+    this.chatMessages.forEach((msg, index) => {
+      if (msg.type === "card") {
+        if (!isGrouping) {
+          // Start grouping if the first card is encountered
+          isGrouping = true;
+          group = [];
+        }
+        group.push(
+          <div class="chat-card" key={`card-${index}`}>
+            <h4>{msg.content.title.text}</h4>
+            <img
+              src={msg.content.imageUrl}
+              alt={msg.content.title.text}
+            />
+            <a
+              href={msg.content.productUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Product
+            </a>
+          </div>
+        );
+      } else if (msg.type === "text" || msg.type === "image") {
+        if (isGrouping) {
+          // Stop grouping if a text or image message is encountered
+          messageGroups.push(
+            <div class="chat-card-group" key={`group-${messageGroups.length}`}>
+              {group}
+            </div>
+          );
+          isGrouping = false; // Reset grouping status
+        }
+
+        if (msg.type === "text") {
+          messageGroups.push(
+            <div
+              class={`chat-message ${msg.isAIReply ? "ai" : "user"}`}
+              key={`text-${index}`}
+            >
+              {msg.content}
+            </div>
+          );
+        } else if (msg.type === "image") {
+          messageGroups.push(
+            <div class="chat-message" key={`image-${index}`}>
+              <img src={msg.content} alt="Image message" />
+            </div>
+          );
+        }
+      }
+    });
+
+    // Add any remaining grouped cards if the loop ended while still grouping
+    if (isGrouping) {
+      messageGroups.push(
+        <div class="chat-card-group swiper" key={`group-${messageGroups.length}`}>
+          {group}
+        </div>
+      );
+    }
+
+    return messageGroups;
   }
 }
