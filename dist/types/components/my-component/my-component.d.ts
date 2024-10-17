@@ -3,8 +3,13 @@ interface ChatMessage {
     content: any;
     isAIReply?: boolean;
 }
+interface Conversation {
+    messageType: string;
+    photoSearchImage?: string;
+    messages: ChatMessage[];
+}
 export declare class MyComponent {
-    chatMessages: ChatMessage[];
+    chatMessages: Conversation[];
     isLoading: boolean;
     errorMessage: string | null;
     componentWillLoad(): Promise<void>;
