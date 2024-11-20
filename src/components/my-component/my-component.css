@@ -157,3 +157,21 @@
   border-radius: 8px;      /* Add rounding if desired */
   object-fit: cover;       /* Cover the area while maintaining aspect ratio */
 }
+
+.chat-message.unknown {
+  background: #f8f8f8;
+  border: 1px dashed #ccc;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.chat-message.image img {
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+.chat-card-group {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}

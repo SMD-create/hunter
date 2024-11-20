@@ -1,22 +1,15 @@
-//my-component.jsx
 import { Component, JSX, State, h } from "@stencil/core";
-import Swiper from "swiper";
-
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-/>
 
 interface ChatMessage {
-  type: string; // 'text', 'card', 'image', 'photo-search', etc.
-  content: any; // Can be string for text or an object for cards or photo-search
-  isAIReply?: boolean; // Optional property to indicate if the message is from AI
+  type: string; // 'text', 'card', 'image', 'photo-search', 'unknown', etc.
+  content: any; // Varies based on the type
+  isAIReply?: boolean;
 }
 
 interface Conversation {
   messageType: string; // e.g., 'photo-search'
   photoSearchImage?: string; // Optional property for photo search images
-  messages: ChatMessage[]; // Array of messages related to the conversation
+  messages: ChatMessage[]; // Messages for this conversation
 }
 
 @Component({
@@ -25,28 +18,25 @@ interface Conversation {
   shadow: true,
 })
 export class MyComponent {
-  @State() chatMessages: Conversation[] = []; // Change the type to Conversation[]
-  @State() isLoading: boolean = true; // Loading state
-  @State() errorMessage: string | null = null; // Error state
+  @State() chatMessages: Conversation[] = [];
+  @State() isLoading: boolean = true;
+  @State() errorMessage: string | null = null;
 
   async componentWillLoad() {
     try {
       const response = await fetch(
         "https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation"
       );
-
       if (response.ok) {
         const data = await response.json();
-        this.chatMessages = data.chat || []; // Safeguard in case `chat` is undefined
+        this.chatMessages = data.chat || [];
       } else {
-        console.error("Error fetching chat messages");
         this.errorMessage = "Failed to load chat messages.";
       }
     } catch (error) {
-      console.error("Error:", error);
       this.errorMessage = "Error fetching chat messages.";
     } finally {
-      this.isLoading = false; // End loading state
+      this.isLoading = false;
     }
   }
 
@@ -54,7 +44,6 @@ export class MyComponent {
     return (
       <div class="chat-container">
         <div class="chat-header">Timmy AI</div>
-
         <div class="chat-messages">
           {this.isLoading ? (
             <div class="loading">Loading messages...</div>
@@ -64,7 +53,6 @@ export class MyComponent {
             this.renderChatMessages()
           )}
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
       </div>
     );
   }
@@ -75,42 +63,37 @@ export class MyComponent {
     let group: JSX.Element[] = [];
 
     this.chatMessages.forEach((conversation, convIndex) => {
-      // Each conversation has a messageType (e.g., 'photo-search') and a nested messages array
       const { messageType, photoSearchImage, messages } = conversation;
 
       messages.forEach((msg, msgIndex) => {
-        if (msg.type === "card") {
+        if (msg.type === "card" || (msg.type === "unknown" && msg.content?.cards)) {
+          // Handle card-like messages
           if (!isGrouping) {
-            // Start grouping if the first card is encountered
             isGrouping = true;
             group = [];
           }
 
-          group.push(
-            <div class="chat-card" key={`card-${convIndex}-${msgIndex}`}>
-              <h4>{msg.content.title.text}</h4>
-              <img
-                src={msg.content.imageUrl}
-                alt={msg.content.title.text}
-              />
-              <a
-                href={msg.content.productUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View Product
-              </a>
-            </div>
-          );
-        } else if (msg.type === "text" || msg.type === "image") {
+          const cards = msg.type === "card" ? [msg.content] : msg.content.cards;
+          cards.forEach((card, cardIndex) => {
+            group.push(
+              <div class="chat-card" key={`card-${convIndex}-${msgIndex}-${cardIndex}`}>
+                <h4>{card.title?.text || "Untitled Card"}</h4>
+                <img src={card.imageUrl || ""} alt={card.title?.text || "Image"} />
+                <a href={card.url || "#"} target="_blank" rel="noopener noreferrer">
+                  View Product
+                </a>
+              </div>
+            );
+          });
+        } else if (msg.type === "text" || msg.type === "image" || msg.type === "unknown") {
+          // Handle text, image, and unknown messages
           if (isGrouping) {
-            // Stop grouping if a non-card message is encountered
             messageGroups.push(
-              <div class="chat-card-group swiper" key={`group-${messageGroups.length}`}>
+              <div class="chat-card-group" key={`group-${messageGroups.length}`}>
                 {group}
               </div>
             );
-            isGrouping = false; // Reset grouping status
+            isGrouping = false;
           }
 
           if (msg.type === "text") {
@@ -124,15 +107,21 @@ export class MyComponent {
             );
           } else if (msg.type === "image") {
             messageGroups.push(
-              <div class="chat-message" key={`image-${convIndex}-${msgIndex}`}>
+              <div class="chat-message image" key={`image-${convIndex}-${msgIndex}`}>
                 <img src={msg.content} alt="Image message" />
+              </div>
+            );
+          } else if (msg.type === "unknown") {
+            messageGroups.push(
+              <div class="chat-message unknown" key={`unknown-${convIndex}-${msgIndex}`}>
+                <pre>{JSON.stringify(msg.content, null, 2)}</pre>
               </div>
             );
           }
         }
       });
 
-      // Render photo search image if available
+      // Handle photo search images
       if (messageType === "photo-search" && photoSearchImage) {
         messageGroups.push(
           <div class="chat-message photo-search" key={`photo-search-${convIndex}`}>
@@ -141,10 +130,10 @@ export class MyComponent {
         );
       }
 
-      // Add any remaining grouped cards if the loop ended while still grouping
+      // Add grouped cards if grouping is still active
       if (isGrouping) {
         messageGroups.push(
-          <div class="chat-card-group swiper" key={`group-${messageGroups.length}`}>
+          <div class="chat-card-group" key={`group-${messageGroups.length}`}>
             {group}
           </div>
         );
