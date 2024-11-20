@@ -1,3 +1,4 @@
+//conversation.js
 import express from 'express';
 import cors from 'cors';
 import fetch from 'node-fetch';
@@ -41,22 +42,21 @@ app.get('/api/conversation', async (req, res) => {
           return message.cards.map(card => ({
             type: 'card',
             content: {
-              title: card.title?.text || '',
-              description: card.description || '',
-              imageUrl: card.imageUrl || '',
-              productUrl: card.url || '',
-              price: card.filteredVariant?.price || '',
+              title: card.title,
+              description: card.description,
+              imageUrl: card.imageUrl,
+              productUrl: card.buttons?.find(button => button.type === 'openUrl')?.url,
             },
-            isAIReply: message.isAIReply || false,
+            isAIReply: message.isAIReply,
           }));
         } else if (message.imageUrl) {
           return {
             type: 'image',
             content: message.imageUrl,
-            productUrl: message.buttons?.find(button => button.type === 'openUrl')?.url || '',
-            isAIReply: message.isAIReply || false,
+            productUrl: message.buttons?.find(button => button.type === 'openUrl')?.url,
+            isAIReply: message.isAIReply,
           };
-        } else if (message.message) {
+        } else {
           const formattedMessage = message.message
             .replace(/<\/?[^>]+(>|$)/g, '')  // Remove HTML tags
             .replace(/&quot;/g, '"')
@@ -68,25 +68,7 @@ app.get('/api/conversation', async (req, res) => {
           return {
             type: 'text',
             content: formattedMessage,
-            isAIReply: message.isAIReply || false,
-          };
-        } else if (message.type === 'unknown' && Array.isArray(message.cards)) {
-          return message.cards.map(card => ({
-            type: 'unknown',
-            content: {
-              title: card.title?.text || '',
-              purpose: card.purpose || '',
-              imageUrl: card.imageUrl || '',
-              productUrl: card.url || '',
-              price: card.filteredVariant?.price || '',
-            },
-          }));
-        } else {
-          // Handle cases where none of the above conditions match
-          return {
-            type: 'unknown',
-            content: message,
-            isAIReply: message.isAIReply || false,
+            isAIReply: message.isAIReply,
           };
         }
       }).flat();
