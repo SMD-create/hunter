@@ -1,0 +1,177 @@
+/*my-component.css*/
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f2f5;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 900px;
+  height: 80%;
+  max-height: 620px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.chat-header {
+  background: linear-gradient(45deg, #007bff, #0056b3);
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-message {
+  padding: 15px;
+  border-radius: 12px;
+  max-width: 80%;
+  position: relative;
+  font-size: 1em;
+  line-height: 1.4;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.chat-message.ai {
+  background-color: #e1f5fe;
+  align-self: flex-start;
+  border: 1px solid #b3e5fc;
+}
+
+.chat-message.user {
+  background-color: #d1e7dd;
+  align-self: flex-end;
+  border: 1px solid #a3d5c3;
+}
+
+/* Chat card group container with horizontal scrolling */
+/* Ensure the chat-card-group maintains its height */
+.chat-card-group {
+  display: flex;
+  flex-direction: row; /* Horizontal alignment */
+  overflow-x: auto; 
+  overflow-y: hidden; /* Horizontal scrolling */
+  gap: 15px; /* Spacing between cards */
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  min-height: 380px; /* Ensure it doesn't shrink smaller than the card height */
+  max-height: 380px; /* Prevent it from expanding beyond the card height */
+  box-sizing: border-box;
+}
+
+
+/* Custom scrollbar for horizontal scrolling */
+.chat-card-group::-webkit-scrollbar {
+  height: 8px;
+}
+
+.chat-card-group::-webkit-scrollbar-thumb {
+  background-color: #007bff;
+  border-radius: 4px;
+}
+
+.chat-card {
+  width: 345px;  /* Fixed width for product cards */
+  height: 350px; /* Fixed height for product cards */
+  min-width: 250px;  /* Set minimum width */
+  min-height: 300px; /* Set minimum height *//* Set fixed height for product cards */
+  border-radius: 8px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.chat-card:hover {
+  transform: translateY(-5px); /* Lift card on hover */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.chat-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 5px 0;
+  object-fit: contain;
+}
+
+.chat-card h4 {
+  margin: 5px 0;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+.chat-card a {
+  margin-top: 5px;
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.chat-card a:hover {
+  background-color: #0056b3;
+}
+
+.chat-message.photo-search {
+  display: flex;
+  justify-content: center; /* Center the image horizontally */
+  align-items: center;     /* Center the image vertically */
+  padding: 10px;          /* Add padding if needed */
+  align-self: flex-end;   /* Align to the user's side */
+}
+
+
+.chat-message.photo-search img {
+  width: 300px;            /* Set a fixed width */
+  height: auto;            /* Maintain aspect ratio */
+  border-radius: 8px;      /* Add rounding if desired */
+  object-fit: cover;       /* Cover the area while maintaining aspect ratio */
+}
+
+.chat-message.unknown {
+  background: #f8f8f8;
+  border: 1px dashed #ccc;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.chat-message.image img {
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+.chat-card-group {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
