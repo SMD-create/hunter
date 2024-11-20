@@ -102,7 +102,7 @@ export class MyComponent {
               </a>
             </div>
           );
-        } else if (msg.type === "text" || msg.type === "image") {
+        } else if (msg.type === "text" || msg.type === "image" || msg.type === "unknown") {
           if (isGrouping) {
             // Stop grouping if a non-card message is encountered
             messageGroups.push(
@@ -124,8 +124,14 @@ export class MyComponent {
             );
           } else if (msg.type === "image") {
             messageGroups.push(
-              <div class="chat-message" key={`image-${convIndex}-${msgIndex}`}>
+              <div class="chat-message image" key={`image-${convIndex}-${msgIndex}`}>
                 <img src={msg.content} alt="Image message" />
+              </div>
+            );
+          } else if (msg.type === "unknown") {
+            messageGroups.push(
+              <div class="chat-message unknown" key={`unknown-${convIndex}-${msgIndex}`}>
+                <pre>{JSON.stringify(msg.content, null, 2)}</pre>
               </div>
             );
           }
