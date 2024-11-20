@@ -27,9 +27,6 @@ const MyComponent = class {
             this.isLoading = false;
         }
     }
-    render() {
-        return (h("div", { key: '221747373fd0fc8fbd3c0823ff4904a6fdce2be2', class: "chat-container" }, h("div", { key: '0434280ec79ee227d5558109059a4c95006dc1d8', class: "chat-header" }, "Timmy AI"), h("div", { key: 'c0fff742682928dcf0528a5fd9d29bc6762985fc', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
-    }
     renderBundleMessages(messages) {
         return (h("div", { class: "bundle-container" }, h("h4", null, "Here's your bundle!"), messages.map((message, index) => {
             var _a, _b, _c, _d;
@@ -84,6 +81,9 @@ const MyComponent = class {
             }
         });
         return messageGroups;
+    }
+    render() {
+        return (h("div", { key: 'e04fd23b16cde0315c124e6d69d958f484f1fbf9', class: "chat-container" }, h("div", { key: '990c80631c475f8c0310e0b382a36479beb8ef0e', class: "chat-header" }, "Timmy AI"), h("div", { key: '9ace42fd003555d7ca82fccde0661e0a031e9bb2', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
     }
 };
 MyComponent.style = myComponentCss;

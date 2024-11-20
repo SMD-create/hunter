@@ -56,24 +56,7 @@ export class MyComponent {
     }
   }
 
-  render() {
-    return (
-      <div class="chat-container">
-        <div class="chat-header">Timmy AI</div>
-        <div class="chat-messages">
-          {this.isLoading ? (
-            <div class="loading">Loading messages...</div>
-          ) : this.errorMessage ? (
-            <div class="error">{this.errorMessage}</div>
-          ) : (
-            this.renderChatMessages()
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  private renderBundleMessages(messages: any[]) {
+  private renderBundleMessages(messages: BundleCard[]) {
     return (
       <div class="bundle-container">
         <h4>Here's your bundle!</h4>
@@ -128,7 +111,6 @@ export class MyComponent {
       </div>
     );
   }
-  
 
   private renderChatMessages() {
     const messageGroups: JSX.Element[] = [];
@@ -242,5 +224,22 @@ export class MyComponent {
     });
 
     return messageGroups;
+  }
+
+  render() {
+    return (
+      <div class="chat-container">
+        <div class="chat-header">Timmy AI</div>
+        <div class="chat-messages">
+          {this.isLoading ? (
+            <div class="loading">Loading messages...</div>
+          ) : this.errorMessage ? (
+            <div class="error">{this.errorMessage}</div>
+          ) : (
+            this.renderChatMessages()
+          )}
+        </div>
+      </div>
+    );
   }
 }

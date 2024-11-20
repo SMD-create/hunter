@@ -28,8 +28,8 @@ export declare class MyComponent {
     isLoading: boolean;
     errorMessage: string | null;
     componentWillLoad(): Promise<void>;
-    render(): any;
     private renderBundleMessages;
     private renderChatMessages;
+    render(): any;
 }
 export {};
