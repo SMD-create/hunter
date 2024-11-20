@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 // Route to fetch conversation from external API
 app.get('/api/conversation', async (req, res) => {
   try {
-    const apiUrl = 'https://chateasy.logbase.io/api/conversation?id=cdb63a0953cd227918b86be96d56f60d42993f5ff8de771d38adba7cfc1f74ed&storeId=timmy-demo.myshopify.com';
+    const apiUrl = 'https://chateasy.logbase.io/api/conversation?id=85febd80c829ad30c9ca3672e8afbcc1699b39bd0e6d59d34bed6c5c9b5878c4&storeId=hobbyco1935.myshopify.com';
 
     const response = await fetch(apiUrl);
     const data = await response.json();
@@ -41,21 +41,21 @@ app.get('/api/conversation', async (req, res) => {
           return message.cards.map(card => ({
             type: 'card',
             content: {
-              title: card.title,
-              description: card.description,
-              imageUrl: card.imageUrl,
-              productUrl: card.buttons?.find(button => button.type === 'openUrl')?.url,
+              title: card.title?.text || '',
+              description: card.description || '',
+              imageUrl: card.imageUrl || '',
+              productUrl: card.url || '',
             },
-            isAIReply: message.isAIReply,
+            isAIReply: message.isAIReply || false,
           }));
         } else if (message.imageUrl) {
           return {
             type: 'image',
             content: message.imageUrl,
-            productUrl: message.buttons?.find(button => button.type === 'openUrl')?.url,
-            isAIReply: message.isAIReply,
+            productUrl: message.buttons?.find(button => button.type === 'openUrl')?.url || '',
+            isAIReply: message.isAIReply || false,
           };
-        } else {
+        } else if (message.message) {
           const formattedMessage = message.message
             .replace(/<\/?[^>]+(>|$)/g, '')  // Remove HTML tags
             .replace(/&quot;/g, '"')
@@ -67,7 +67,14 @@ app.get('/api/conversation', async (req, res) => {
           return {
             type: 'text',
             content: formattedMessage,
-            isAIReply: message.isAIReply,
+            isAIReply: message.isAIReply || false,
+          };
+        } else {
+          // Handle cases where none of the above conditions match
+          return {
+            type: 'unknown',
+            content: '',
+            isAIReply: message.isAIReply || false,
           };
         }
       }).flat();

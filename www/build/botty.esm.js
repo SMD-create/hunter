@@ -1,9 +1,9 @@
-import { B as BUILD, c as consoleDevInfo, H, d as doc, N as NAMESPACE, p as promiseResolve, b as bootstrapLazy } from './index-f11e3b55.js';
-export { s as setNonce } from './index-f11e3b55.js';
+import { B as BUILD, c as consoleDevInfo, H, d as doc, N as NAMESPACE, p as promiseResolve, b as bootstrapLazy } from './index-29c61e3f.js';
+export { s as setNonce } from './index-29c61e3f.js';
 import { g as globalScripts } from './app-globals-0f993ce5.js';
 
 /*
- Stencil Client Patch Browser v4.22.1 | MIT Licensed | https://stenciljs.com
+ Stencil Client Patch Browser v4.22.2 | MIT Licensed | https://stenciljs.com
  */
 var patchBrowser = () => {
   if (BUILD.isDev && !BUILD.isTesting) {

@@ -3,7 +3,7 @@ const BUILD = /* botty */ { allRenderFn: true, appendChildSlotFix: false, asyncL
 const Env = /* botty */ {};
 
 /*
- Stencil Client Platform v4.22.1 | MIT Licensed | https://stenciljs.com
+ Stencil Client Platform v4.22.2 | MIT Licensed | https://stenciljs.com
  */
 var __defProp = Object.defineProperty;
 var __export = (target, all) => {
@@ -807,11 +807,17 @@ var addStyle = (styleContainerNode, cmpMeta, mode) => {
               const referenceNode2 = preconnectLinks.length > 0 ? preconnectLinks[preconnectLinks.length - 1].nextSibling : styleContainerNode.querySelector("style");
               styleContainerNode.insertBefore(styleElm, referenceNode2);
             } else if ("host" in styleContainerNode) {
-              const existingStyleContainer = styleContainerNode.querySelector("style");
-              if (existingStyleContainer) {
-                existingStyleContainer.innerHTML = style + existingStyleContainer.innerHTML;
+              if (supportsConstructableStylesheets) {
+                const stylesheet = new CSSStyleSheet();
+                stylesheet.replaceSync(style);
+                styleContainerNode.adoptedStyleSheets = [stylesheet, ...styleContainerNode.adoptedStyleSheets];
               } else {
-                styleContainerNode.prepend(styleElm);
+                const existingStyleContainer = styleContainerNode.querySelector("style");
+                if (existingStyleContainer) {
+                  existingStyleContainer.innerHTML = style + existingStyleContainer.innerHTML;
+                } else {
+                  styleContainerNode.prepend(styleElm);
+                }
               }
             } else {
               styleContainerNode.append(styleElm);
@@ -3030,4 +3036,4 @@ var insertChildVNodeAnnotations = (doc2, vnodeChild, cmpData, hostId, depth, ind
 
 export { BUILD as B, H, NAMESPACE as N, bootstrapLazy as b, consoleDevInfo as c, doc as d, h, promiseResolve as p, registerInstance as r, setNonce as s };
 
-//# sourceMappingURL=index-f11e3b55.js.map
+//# sourceMappingURL=index-29c61e3f.js.map

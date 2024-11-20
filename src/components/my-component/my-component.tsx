@@ -1,3 +1,4 @@
+//my-component.jsx
 import { Component, JSX, State, h } from "@stencil/core";
 import Swiper from "swiper";
 
