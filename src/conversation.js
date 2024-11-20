@@ -45,6 +45,7 @@ app.get('/api/conversation', async (req, res) => {
               description: card.description || '',
               imageUrl: card.imageUrl || '',
               productUrl: card.url || '',
+              price: card.filteredVariant?.price || '',
             },
             isAIReply: message.isAIReply || false,
           }));
@@ -69,11 +70,22 @@ app.get('/api/conversation', async (req, res) => {
             content: formattedMessage,
             isAIReply: message.isAIReply || false,
           };
+        } else if (message.type === 'unknown' && Array.isArray(message.cards)) {
+          return message.cards.map(card => ({
+            type: 'unknown',
+            content: {
+              title: card.title?.text || '',
+              purpose: card.purpose || '',
+              imageUrl: card.imageUrl || '',
+              productUrl: card.url || '',
+              price: card.filteredVariant?.price || '',
+            },
+          }));
         } else {
           // Handle cases where none of the above conditions match
           return {
             type: 'unknown',
-            content: '',
+            content: message,
             isAIReply: message.isAIReply || false,
           };
         }

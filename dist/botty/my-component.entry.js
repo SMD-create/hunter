@@ -31,7 +31,7 @@ const MyComponent = class {
         }
     }
     render() {
-        return (h("div", { key: '3a8e69faf330f83e7ca177d963ab25f015d549dc', class: "chat-container" }, h("div", { key: '858321ed4d67ec6b46d75a762a6fae4788e7dc0f', class: "chat-header" }, "Timmy AI"), h("div", { key: '6a06a34625a16b85152b021965c4fc94bcdd6af3', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages())), h("script", { key: 'ef248764fe4e793ce7948dad319f6d2dcff5fc15', src: "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" })));
+        return (h("div", { key: 'd491e6ddd5a9f857ec6408dab11fffc21f840aab', class: "chat-container" }, h("div", { key: '3b4965cb20cf3e86bd74fd3c5f9ea6dc4a1adf7c', class: "chat-header" }, "Timmy AI"), h("div", { key: '8d9ad2ba4d4d0e3c78a287023e970f12c553c456', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages())), h("script", { key: '57ddc62a10edb950d05139d1e14bb86371bf5687', src: "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" })));
     }
     renderChatMessages() {
         const messageGroups = [];
