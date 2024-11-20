@@ -73,45 +73,52 @@ export class MyComponent {
     );
   }
 
-  private renderBundleMessages(cards: BundleCard[]) {
+  private renderBundleMessages(messages: any[]) {
     return (
       <div class="bundle-container">
         <h4>Here's your bundle!</h4>
-        {cards.map((card, index) => (
+        {messages.map((message, index) => (
           <div class="bundle-item" key={`bundle-${index}`}>
             <div class="bundle-item-content">
+              {/* Product Image */}
               <img
-                src={card.imageUrl}
-                alt={card.title.text}
+                src={message.imageUrl}
+                alt={message.title.text}
                 class="bundle-item-image"
               />
+              {/* Product Details */}
               <div class="bundle-item-details">
-                <h5 class="bundle-item-title">{card.title.text}</h5>
+                <h5 class="bundle-item-title">{message.title.text}</h5>
                 <p class="bundle-item-purpose">
-                  {card.purpose || "No description available."}
+                  {message.purpose || "No description available."}
                 </p>
-                <div class="bundle-item-price">
+              </div>
+              {/* Price Section */}
+              <div class="bundle-item-price-section">
+                {message.variants?.[0]?.originalPrice && (
                   <span class="original-price">
-                    {card.variants?.[0]?.originalPrice
-                      ? `Rs. ${card.variants[0].originalPrice}`
-                      : ""}
+                    Rs. {message.variants[0].originalPrice}
                   </span>
-                  <span class="final-price">
-                    Rs. {card.variants?.[0]?.price || "N/A"}
-                  </span>
-                </div>
+                )}
+                <span class="final-price">
+                  Rs. {message.variants?.[0]?.price || "N/A"}
+                </span>
               </div>
             </div>
+            {/* Checkbox */}
             <div class="bundle-item-checkbox">
               <input type="checkbox" defaultChecked />
             </div>
+            {/* Separator */}
+            {index < messages.length - 1 && <div class="bundle-separator">+</div>}
           </div>
         ))}
+        {/* Total Price Section */}
         <div class="bundle-total">
-          <span>Total ({cards.length})</span>
+          <span>Total ({messages.length})</span>
           <span>
             Rs.{" "}
-            {cards.reduce(
+            {messages.reduce(
               (total, item) =>
                 total + parseFloat(item.variants?.[0]?.price || "0"),
               0
@@ -121,6 +128,7 @@ export class MyComponent {
       </div>
     );
   }
+  
 
   private renderChatMessages() {
     const messageGroups: JSX.Element[] = [];
