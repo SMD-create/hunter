@@ -1,7 +1,22 @@
 interface ChatMessage {
-    type: string;
+    type: "text" | "card" | "image" | "bundle" | "photo-search" | "unknown";
     content: any;
     isAIReply?: boolean;
+    cards?: Array<BundleCard>;
+}
+interface BundleCard {
+    title: {
+        type: "text";
+        text: string;
+    };
+    purpose: string;
+    imageUrl: string;
+    variants: Array<{
+        title: string;
+        price: string;
+        originalPrice?: string;
+        id: number;
+    }>;
 }
 interface Conversation {
     messageType: string;
@@ -14,6 +29,7 @@ export declare class MyComponent {
     errorMessage: string | null;
     componentWillLoad(): Promise<void>;
     render(): any;
+    private renderBundleMessages;
     private renderChatMessages;
 }
 export {};

@@ -1,14 +1,30 @@
 import { Component, JSX, State, h } from "@stencil/core";
 
 interface ChatMessage {
-  type: string; // 'text', 'card', 'image', 'photo-search', 'unknown', etc.
-  content: any; // Varies based on the type
+  type: "text" | "card" | "image" | "bundle" | "photo-search" | "unknown";
+  content: any; // Varies based on type
   isAIReply?: boolean;
+  cards?: Array<BundleCard>; // Optional cards property for 'bundle' messages
+}
+
+interface BundleCard {
+  title: {
+    type: "text";
+    text: string;
+  };
+  purpose: string;
+  imageUrl: string;
+  variants: Array<{
+    title: string;
+    price: string;
+    originalPrice?: string;
+    id: number;
+  }>;
 }
 
 interface Conversation {
   messageType: string; // e.g., 'photo-search'
-  photoSearchImage?: string; // Optional property for photo search images
+  photoSearchImage?: string; // Optional for photo search images
   messages: ChatMessage[]; // Messages for this conversation
 }
 
@@ -57,6 +73,55 @@ export class MyComponent {
     );
   }
 
+  private renderBundleMessages(cards: BundleCard[]) {
+    return (
+      <div class="bundle-container">
+        <h4>Here's your bundle!</h4>
+        {cards.map((card, index) => (
+          <div class="bundle-item" key={`bundle-${index}`}>
+            <div class="bundle-item-content">
+              <img
+                src={card.imageUrl}
+                alt={card.title.text}
+                class="bundle-item-image"
+              />
+              <div class="bundle-item-details">
+                <h5 class="bundle-item-title">{card.title.text}</h5>
+                <p class="bundle-item-purpose">
+                  {card.purpose || "No description available."}
+                </p>
+                <div class="bundle-item-price">
+                  <span class="original-price">
+                    {card.variants?.[0]?.originalPrice
+                      ? `Rs. ${card.variants[0].originalPrice}`
+                      : ""}
+                  </span>
+                  <span class="final-price">
+                    Rs. {card.variants?.[0]?.price || "N/A"}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="bundle-item-checkbox">
+              <input type="checkbox" defaultChecked />
+            </div>
+          </div>
+        ))}
+        <div class="bundle-total">
+          <span>Total ({cards.length})</span>
+          <span>
+            Rs.{" "}
+            {cards.reduce(
+              (total, item) =>
+                total + parseFloat(item.variants?.[0]?.price || "0"),
+              0
+            )}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   private renderChatMessages() {
     const messageGroups: JSX.Element[] = [];
     let isGrouping = false;
@@ -67,7 +132,6 @@ export class MyComponent {
 
       messages.forEach((msg, msgIndex) => {
         if (msg.type === "card" || (msg.type === "unknown" && msg.content?.cards)) {
-          // Handle card-like messages
           if (!isGrouping) {
             isGrouping = true;
             group = [];
@@ -76,20 +140,42 @@ export class MyComponent {
           const cards = msg.type === "card" ? [msg.content] : msg.content.cards;
           cards.forEach((card, cardIndex) => {
             group.push(
-              <div class="chat-card" key={`card-${convIndex}-${msgIndex}-${cardIndex}`}>
+              <div
+                class="chat-card"
+                key={`card-${convIndex}-${msgIndex}-${cardIndex}`}
+              >
                 <h4>{card.title?.text || "Untitled Card"}</h4>
-                <img src={card.imageUrl || ""} alt={card.title?.text || "Image"} />
-                <a href={card.url || "#"} target="_blank" rel="noopener noreferrer">
+                <img
+                  src={card.imageUrl || ""}
+                  alt={card.title?.text || "Image"}
+                />
+                <a
+                  href={card.url || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   View Product
                 </a>
               </div>
             );
           });
-        } else if (msg.type === "text" || msg.type === "image" || msg.type === "unknown") {
-          // Handle text, image, and unknown messages
+        } else if (msg.type === "bundle") {
+          messageGroups.push(
+            <div class="chat-bundle" key={`bundle-${convIndex}-${msgIndex}`}>
+              {this.renderBundleMessages(msg.cards || [])}
+            </div>
+          );
+        } else if (
+          msg.type === "text" ||
+          msg.type === "image" ||
+          msg.type === "unknown"
+        ) {
           if (isGrouping) {
             messageGroups.push(
-              <div class="chat-card-group" key={`group-${messageGroups.length}`}>
+              <div
+                class="chat-card-group"
+                key={`group-${messageGroups.length}`}
+              >
                 {group}
               </div>
             );
@@ -107,13 +193,19 @@ export class MyComponent {
             );
           } else if (msg.type === "image") {
             messageGroups.push(
-              <div class="chat-message image" key={`image-${convIndex}-${msgIndex}`}>
+              <div
+                class="chat-message image"
+                key={`image-${convIndex}-${msgIndex}`}
+              >
                 <img src={msg.content} alt="Image message" />
               </div>
             );
           } else if (msg.type === "unknown") {
             messageGroups.push(
-              <div class="chat-message unknown" key={`unknown-${convIndex}-${msgIndex}`}>
+              <div
+                class="chat-message unknown"
+                key={`unknown-${convIndex}-${msgIndex}`}
+              >
                 <pre>{JSON.stringify(msg.content, null, 2)}</pre>
               </div>
             );
@@ -121,16 +213,17 @@ export class MyComponent {
         }
       });
 
-      // Handle photo search images
       if (messageType === "photo-search" && photoSearchImage) {
         messageGroups.push(
-          <div class="chat-message photo-search" key={`photo-search-${convIndex}`}>
+          <div
+            class="chat-message photo-search"
+            key={`photo-search-${convIndex}`}
+          >
             <img src={photoSearchImage} alt="Photo search result" />
           </div>
         );
       }
 
-      // Add grouped cards if grouping is still active
       if (isGrouping) {
         messageGroups.push(
           <div class="chat-card-group" key={`group-${messageGroups.length}`}>
