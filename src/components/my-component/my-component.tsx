@@ -63,13 +63,11 @@ export class MyComponent {
         {cards.map((card, index) => (
           <div class="bundle-item" key={`bundle-card-${index}`}>
             <div class="bundle-content">
-              {/* Product Image */}
               <img
                 src={card.imageUrl}
                 alt={card.title.text}
                 class="bundle-item-image"
               />
-              {/* Product Details */}
               <div class="bundle-item-details">
                 <h5 class="bundle-item-title">{card.title.text}</h5>
                 <p class="bundle-item-purpose">
@@ -83,7 +81,6 @@ export class MyComponent {
             {index < cards.length - 1 && <hr class="bundle-separator" />}
           </div>
         ))}
-        {/* Total Price */}
         <div class="bundle-total">
           <strong>Total:</strong>{" "}
           Rs.{" "}
@@ -133,7 +130,10 @@ export class MyComponent {
 
   private renderImageMessage(msg: ChatMessage, key: string) {
     return (
-      <div class="chat-message image" key={key}>
+      <div
+        class={`chat-message image ${msg.isAIReply ? "ai" : "user"}`}
+        key={key}
+      >
         <img src={msg.content} alt="Image message" />
       </div>
     );
@@ -165,7 +165,9 @@ export class MyComponent {
             case "image":
               return this.renderImageMessage(msg, key);
             case "card":
-              return <div class="chat-card-group">{this.renderCardMessages([msg.content])}</div>;
+              return (
+                <div class="chat-card-group">{this.renderCardMessages([msg.content])}</div>
+              );
             case "bundle":
               return (
                 <div class="chat-bundle" key={key}>
