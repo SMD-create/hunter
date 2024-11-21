@@ -1,3 +1,4 @@
+/* General styling for the host element */
 :host {
   display: flex;
   justify-content: center;
@@ -9,6 +10,7 @@
   background-color: #f0f2f5;
 }
 
+/* Chat container styling */
 .chat-container {
   display: flex;
   flex-direction: column;
@@ -22,6 +24,7 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
+/* Chat header styling */
 .chat-header {
   background: linear-gradient(45deg, #007bff, #0056b3);
   color: white;
@@ -31,6 +34,7 @@
   font-weight: bold;
 }
 
+/* Chat messages styling */
 .chat-messages {
   flex: 1;
   padding: 20px;
@@ -41,6 +45,7 @@
   gap: 10px;
 }
 
+/* Chat message styling (both AI and user messages) */
 .chat-message {
   padding: 15px;
   border-radius: 12px;
@@ -63,6 +68,150 @@
   border: 1px solid #a3d5c3;
 }
 
+/* Chat card group container with horizontal scrolling */
+.chat-card-group {
+  display: flex;
+  flex-direction: row; /* Horizontal alignment */
+  overflow-x: auto;
+  gap: 15px; /* Spacing between cards */
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  min-height: 380px; /* Ensure it doesn't shrink smaller than the card height */
+  max-height: 380px; /* Prevent it from expanding beyond the card height */
+  box-sizing: border-box;
+}
+
+/* Custom scrollbar for horizontal scrolling */
+.chat-card-group::-webkit-scrollbar {
+  height: 8px;
+}
+
+.chat-card-group::-webkit-scrollbar-thumb {
+  background-color: #007bff;
+  border-radius: 4px;
+}
+
+/* Styling for individual chat cards */
+.chat-card {
+  width: 345px; /* Fixed width for product cards */
+  height: 350px; /* Fixed height for product cards */
+  min-width: 250px; /* Set minimum width */
+  min-height: 300px; /* Set minimum height */
+  border-radius: 8px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.chat-card:hover {
+  transform: translateY(-5px); /* Lift card on hover */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.chat-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 5px 0;
+  object-fit: contain;
+}
+
+.chat-card h4 {
+  margin: 5px 0;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+.chat-card a {
+  margin-top: 5px;
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.chat-card a:hover {
+  background-color: #0056b3;
+}
+
+/* Photo search message styling */
+.chat-message.photo-search {
+  display: flex;
+  justify-content: center; /* Center the image horizontally */
+  align-items: center;     /* Center the image vertically */
+  padding: 10px;
+  align-self: flex-end;    /* Align to the user's side */
+}
+
+.chat-message.photo-search img {
+  width: 300px;            /* Set a fixed width */
+  height: auto;            /* Maintain aspect ratio */
+  border-radius: 8px;      /* Add rounding if desired */
+  object-fit: cover;       /* Cover the area while maintaining aspect ratio */
+}
+
+/* Styling for bundle messages */
+.chat-bundle {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.bundle-header {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.bundle-item {
+  display: flex;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.bundle-image img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.bundle-info {
+  flex: 1;
+}
+
+.bundle-info h4 {
+  font-size: 16px;
+}
+
+.bundle-total {
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: right;
+}
+
+.bundle-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-message.unknown {
+  background: #f8f8f8;
+  border: 1px dashed #ccc;
+  padding: 10px;
+  margin: 10px 0;
+}
+
 .chat-message.image img {
   max-width: 100%;
   border-radius: 5px;
@@ -71,4 +220,95 @@
 .chat-card-group {
   display: flex;
   gap: 10px;
+  margin: 10px 0;
+}
+
+.bundle-container {
+  background: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+}
+
+.bundle-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.bundle-item:last-child {
+  border-bottom: none;
+}
+
+.bundle-item-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 12px;
+}
+
+.bundle-item-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.bundle-item-details {
+  flex: 1;
+}
+
+.bundle-item-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.bundle-item-purpose {
+  font-size: 12px;
+  color: #666;
+  margin: 4px 0 0 0;
+}
+
+.bundle-item-price-section {
+  text-align: right;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+.final-price {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.bundle-item-checkbox {
+  margin-left: 12px;
+}
+
+.bundle-separator {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #666;
+  padding: 8px 0;
+}
+
+.bundle-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  font-weight: bold;
+  background-color: #e8f5e9;
+  color: #388e3c;
+  border-radius: 4px;
+  font-size: 14px;
 }
