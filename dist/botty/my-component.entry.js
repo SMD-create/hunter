@@ -27,52 +27,63 @@ const MyComponent = class {
             this.isLoading = false;
         }
     }
-    renderBundleMessages(cards) {
-        return (h("div", { class: "bundle-container" }, h("h4", null, "Your Bundle"), cards.map((card, index) => {
-            var _a, _b;
-            return (h("div", { class: "bundle-item", key: `bundle-card-${index}` }, h("div", { class: "bundle-content" }, h("img", { src: card.imageUrl, alt: card.title.text, class: "bundle-item-image" }), h("div", { class: "bundle-item-details" }, h("h5", { class: "bundle-item-title" }, card.title.text), h("p", { class: "bundle-item-purpose" }, card.purpose || "No description available."), h("span", { class: "bundle-item-price" }, "Rs. ", ((_b = (_a = card.variants) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.price) || "N/A"))), index < cards.length - 1 && h("hr", { class: "bundle-separator" })));
-        }), h("div", { class: "bundle-total" }, h("strong", null, "Total:"), " ", "Rs.", " ", cards.reduce((total, card) => { var _a, _b; return total + parseFloat(((_b = (_a = card.variants) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.price) || "0"); }, 0))));
-    }
-    renderCardMessages(cards) {
-        return cards.map((card, index) => {
-            var _a, _b;
-            return (h("div", { class: "chat-card", key: `card-${index}` }, h("h4", null, ((_a = card.title) === null || _a === void 0 ? void 0 : _a.text) || "Untitled Card"), h("img", { src: card.imageUrl || "", alt: ((_b = card.title) === null || _b === void 0 ? void 0 : _b.text) || "Image", class: "card-image" }), card.url && (h("a", { href: card.url, target: "_blank", rel: "noopener noreferrer", class: "card-link" }, "View Product"))));
-        });
-    }
-    renderTextMessage(msg, key) {
-        return (h("div", { class: `chat-message ${msg.isAIReply ? "ai" : "user"}`, key: key }, msg.content));
-    }
-    renderImageMessage(msg, key) {
-        return (h("div", { class: "chat-message image", key: key }, h("img", { src: msg.content, alt: "Image message" })));
-    }
-    renderUnknownMessage(msg, key) {
-        var _a;
-        if (((_a = msg.content) === null || _a === void 0 ? void 0 : _a.type) === "bundle") {
-            return (h("div", { class: "chat-bundle", key: key }, this.renderBundleMessages(msg.content.cards || [])));
-        }
-        return (h("div", { class: "chat-message unknown", key: key }, h("pre", null, JSON.stringify(msg.content, null, 2))));
+    renderBundleMessages(messages) {
+        return (h("div", { class: "bundle-container" }, h("h4", null, "Here's your bundle!"), messages.map((message, index) => {
+            var _a, _b, _c, _d;
+            return (h("div", { class: "bundle-item", key: `bundle-${index}` }, h("div", { class: "bundle-item-content" }, h("img", { src: message.imageUrl, alt: message.title.text, class: "bundle-item-image" }), h("div", { class: "bundle-item-details" }, h("h5", { class: "bundle-item-title" }, message.title.text), h("p", { class: "bundle-item-purpose" }, message.purpose || "No description available.")), h("div", { class: "bundle-item-price-section" }, ((_b = (_a = message.variants) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.originalPrice) && (h("span", { class: "original-price" }, "Rs. ", message.variants[0].originalPrice)), h("span", { class: "final-price" }, "Rs. ", ((_d = (_c = message.variants) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.price) || "N/A"))), h("div", { class: "bundle-item-checkbox" }, h("input", { type: "checkbox", defaultChecked: true })), index < messages.length - 1 && h("div", { class: "bundle-separator" }, "+")));
+        }), h("div", { class: "bundle-total" }, h("span", null, "Total (", messages.length, ")"), h("span", null, "Rs.", " ", messages.reduce((total, item) => { var _a, _b; return total + parseFloat(((_b = (_a = item.variants) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.price) || "0"); }, 0)))));
     }
     renderChatMessages() {
-        return this.chatMessages.map((conversation, convIndex) => (h("div", { class: "conversation", key: `conv-${convIndex}` }, conversation.messages.map((msg, msgIndex) => {
-            const key = `msg-${convIndex}-${msgIndex}`;
-            switch (msg.type) {
-                case "text":
-                    return this.renderTextMessage(msg, key);
-                case "image":
-                    return this.renderImageMessage(msg, key);
-                case "card":
-                    return h("div", { class: "chat-card-group" }, this.renderCardMessages([msg.content]));
-                case "bundle":
-                    return (h("div", { class: "chat-bundle", key: key }, this.renderBundleMessages(msg.cards || [])));
-                case "unknown":
-                    return this.renderUnknownMessage(msg, key);
-                default:
-                    return (h("div", { class: "chat-message unhandled", key: key }, "Unhandled message type: ", msg.type));
+        const messageGroups = [];
+        let isGrouping = false;
+        let group = [];
+        this.chatMessages.forEach((conversation, convIndex) => {
+            const { messageType, photoSearchImage, messages } = conversation;
+            messages.forEach((msg, msgIndex) => {
+                var _a;
+                if (msg.type === "card" || (msg.type === "unknown" && ((_a = msg.content) === null || _a === void 0 ? void 0 : _a.cards))) {
+                    if (!isGrouping) {
+                        isGrouping = true;
+                        group = [];
+                    }
+                    const cards = msg.type === "card" ? [msg.content] : msg.content.cards;
+                    cards.forEach((card, cardIndex) => {
+                        var _a, _b;
+                        group.push(h("div", { class: "chat-card", key: `card-${convIndex}-${msgIndex}-${cardIndex}` }, h("h4", null, ((_a = card.title) === null || _a === void 0 ? void 0 : _a.text) || "Untitled Card"), h("img", { src: card.imageUrl || "", alt: ((_b = card.title) === null || _b === void 0 ? void 0 : _b.text) || "Image" }), h("a", { href: card.url || "#", target: "_blank", rel: "noopener noreferrer" }, "View Product")));
+                    });
+                }
+                else if (msg.type === "bundle") {
+                    messageGroups.push(h("div", { class: "chat-bundle", key: `bundle-${convIndex}-${msgIndex}` }, this.renderBundleMessages(msg.cards || [])));
+                }
+                else if (msg.type === "text" ||
+                    msg.type === "image" ||
+                    msg.type === "unknown") {
+                    if (isGrouping) {
+                        messageGroups.push(h("div", { class: "chat-card-group", key: `group-${messageGroups.length}` }, group));
+                        isGrouping = false;
+                    }
+                    if (msg.type === "text") {
+                        messageGroups.push(h("div", { class: `chat-message ${msg.isAIReply ? "ai" : "user"}`, key: `text-${convIndex}-${msgIndex}` }, msg.content));
+                    }
+                    else if (msg.type === "image") {
+                        messageGroups.push(h("div", { class: "chat-message image", key: `image-${convIndex}-${msgIndex}` }, h("img", { src: msg.content, alt: "Image message" })));
+                    }
+                    else if (msg.type === "unknown") {
+                        messageGroups.push(h("div", { class: "chat-message unknown", key: `unknown-${convIndex}-${msgIndex}` }, h("pre", null, JSON.stringify(msg.content, null, 2))));
+                    }
+                }
+            });
+            if (messageType === "photo-search" && photoSearchImage) {
+                messageGroups.push(h("div", { class: "chat-message photo-search", key: `photo-search-${convIndex}` }, h("img", { src: photoSearchImage, alt: "Photo search result" })));
             }
-        }))));
+            if (isGrouping) {
+                messageGroups.push(h("div", { class: "chat-card-group", key: `group-${messageGroups.length}` }, group));
+            }
+        });
+        return messageGroups;
     }
     render() {
-        return (h("div", { key: 'e118112aeed01e2ddf0a8bdba7838570eec50732', class: "chat-container" }, h("div", { key: '29174c7567a8a99674f3176128909b7896ef0cec', class: "chat-header" }, "Timmy AI"), h("div", { key: '19fcca5411c0bc7e7c89ae04f411f6fa9048ea05', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
+        return (h("div", { key: '115640803145a752342bfce66bb45086ce61f913', class: "chat-container" }, h("div", { key: '0e2145c8cd5620b6a5028ab9d64ab556b515e86c', class: "chat-header" }, "Timmy AI"), h("div", { key: '463896018f3fdabaa6763c8b4cc64020868e0726', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
     }
 };
 MyComponent.style = myComponentCss;
