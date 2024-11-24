@@ -28,7 +28,7 @@ const MyComponent = class {
         }
     }
     render() {
-        return (h("div", { key: '3d55c505622681d25241ff1499872d65a8646070', class: "chat-container" }, h("div", { key: '55dc51243ee1582e2a27bb9a249884d8a4cb1221', class: "chat-header" }, "Timmy AI"), h("div", { key: '45a0547a87815c04ff1808b73b163e3946368dce', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
+        return (h("div", { key: 'a06279b30d6da9d989c83920db3f6ed6e35ffc6f', class: "chat-container" }, h("div", { key: '57b9a5066a438f6a0d8a28fe5cd7d63dc94788a0', class: "chat-header" }, "Timmy AI"), h("div", { key: 'b4d9ffb7f476a1e7323b570e713053fa41412730', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
     }
     renderBundleMessages(cards) {
         return (h("div", { class: "bundle-container" }, h("h4", { class: "bundle-header" }, "Here's your bundle!"), cards.map((card, index) => {
@@ -44,16 +44,14 @@ const MyComponent = class {
             const { messageType, photoSearchImage, messages } = conversation;
             messages.forEach((msg, msgIndex) => {
                 var _a;
-                // Check if the message type is "unknown"
                 if (msg.type === "unknown") {
-                    // Handle the unknown type with bundle content inside it
+                    // Handle unknown types
                     if (msg.content && msg.content.type === "bundle" && msg.content.cards) {
-                        // Render bundle if it's an unknown type with bundle content
                         groupedMessages.push(h("div", { class: "chat-message unknown", key: `unknown-${convIndex}-${msgIndex}` }, h("div", { class: "message-content" }, this.renderBundleMessages(msg.content.cards))));
                     }
                 }
                 else if (msg.type === "card") {
-                    // Handle grouping for cards (already implemented)
+                    // Grouping logic for cards
                     if (!isGrouping) {
                         isGrouping = true;
                         currentGroup = [];
@@ -69,11 +67,13 @@ const MyComponent = class {
                     });
                 }
                 else if (((_a = msg.content) === null || _a === void 0 ? void 0 : _a.type) === "bundle") {
-                    // Render bundle messages (already implemented)
                     groupedMessages.push(h("div", { class: "chat-bundle", key: `bundle-${convIndex}-${msgIndex}` }, this.renderBundleMessages(msg.cards || [])));
                 }
+                else if (messageType === "photo-search" && msg.type === "text") {
+                    // Do not process text messages separately for photo-search
+                }
                 else {
-                    // Handle other message types (already implemented)
+                    // Handle other message types
                     if (isGrouping) {
                         groupedMessages.push(h("div", { class: "chat-card-group", key: `group-${groupedMessages.length}` }, currentGroup));
                         isGrouping = false;
@@ -86,8 +86,14 @@ const MyComponent = class {
                     }
                 }
             });
+            // Render photo-search image and its text together
             if (messageType === "photo-search" && photoSearchImage) {
                 groupedMessages.push(h("div", { class: "chat-message photo-search", key: `photo-search-${convIndex}` }, h("img", { src: photoSearchImage, alt: "Photo search result" })));
+                // Add text message associated with the photo-search image
+                const textMessage = messages.find((msg) => msg.type === "text");
+                if (textMessage) {
+                    groupedMessages.push(h("div", { class: `chat-message ${textMessage.isAIReply ? "ai" : "user"}`, key: `photo-search-text-${convIndex}` }, textMessage.content));
+                }
             }
         });
         if (isGrouping) {

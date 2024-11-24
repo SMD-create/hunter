@@ -128,11 +128,9 @@ export class MyComponent {
       const { messageType, photoSearchImage, messages } = conversation;
   
       messages.forEach((msg, msgIndex) => {
-        // Check if the message type is "unknown"
         if (msg.type === "unknown") {
-          // Handle the unknown type with bundle content inside it
+          // Handle unknown types
           if (msg.content && msg.content.type === "bundle" && msg.content.cards) {
-            // Render bundle if it's an unknown type with bundle content
             groupedMessages.push(
               <div
                 class="chat-message unknown"
@@ -144,9 +142,8 @@ export class MyComponent {
               </div>
             );
           }
-
-        } else if (msg.type === "card" ) {
-          // Handle grouping for cards (already implemented)
+        } else if (msg.type === "card") {
+          // Grouping logic for cards
           if (!isGrouping) {
             isGrouping = true;
             currentGroup = [];
@@ -180,14 +177,15 @@ export class MyComponent {
             );
           });
         } else if (msg.content?.type === "bundle") {
-          // Render bundle messages (already implemented)
           groupedMessages.push(
             <div class="chat-bundle" key={`bundle-${convIndex}-${msgIndex}`}>
               {this.renderBundleMessages(msg.cards || [])}
             </div>
           );
+        } else if (messageType === "photo-search" && msg.type === "text") {
+          // Do not process text messages separately for photo-search
         } else {
-          // Handle other message types (already implemented)
+          // Handle other message types
           if (isGrouping) {
             groupedMessages.push(
               <div class="chat-card-group" key={`group-${groupedMessages.length}`}>
@@ -218,6 +216,7 @@ export class MyComponent {
         }
       });
   
+      // Render photo-search image and its text together
       if (messageType === "photo-search" && photoSearchImage) {
         groupedMessages.push(
           <div
@@ -227,6 +226,19 @@ export class MyComponent {
             <img src={photoSearchImage} alt="Photo search result" />
           </div>
         );
+  
+        // Add text message associated with the photo-search image
+        const textMessage = messages.find((msg) => msg.type === "text");
+        if (textMessage) {
+          groupedMessages.push(
+            <div
+              class={`chat-message ${textMessage.isAIReply ? "ai" : "user"}`}
+              key={`photo-search-text-${convIndex}`}
+            >
+              {textMessage.content}
+            </div>
+          );
+        }
       }
     });
   
@@ -240,5 +252,6 @@ export class MyComponent {
   
     return groupedMessages;
   }
+  
   
 }
