@@ -85,7 +85,9 @@ export class MyComponent {
               class="bundle-item-image"
             />
             <div class="bundle-item-details">
-              <h5 class="bundle-item-title">{card.title.text || "Untitled Product"}</h5>
+              <h5 class="bundle-item-title">
+                {card.title.text || "Untitled Product"}
+              </h5>
               <p class="bundle-item-purpose">
                 {card.purpose || "No description available."}
               </p>
@@ -95,7 +97,9 @@ export class MyComponent {
                     ? `Rs. ${card.variants[0].originalPrice}`
                     : ""}
                 </span>
-                <span class="final-price">Rs. {card.variants?.[0]?.price || "N/A"}</span>
+                <span class="final-price">
+                  Rs. {card.variants?.[0]?.price || "N/A"}
+                </span>
               </div>
             </div>
           </div>
@@ -124,7 +128,10 @@ export class MyComponent {
       const { messageType, photoSearchImage, messages } = conversation;
 
       messages.forEach((msg, msgIndex) => {
-        if (msg.type === "card" || (msg.type === "unknown" && msg.content?.cards)) {
+        if (
+          msg.type === "card" ||
+          (msg.type === "unknown" && msg.content?.cards)
+        ) {
           // Handle grouping for cards
           if (!isGrouping) {
             isGrouping = true;
@@ -133,15 +140,29 @@ export class MyComponent {
           const cards = msg.type === "card" ? [msg.content] : msg.content.cards;
           cards.forEach((card, cardIndex) => {
             currentGroup.push(
-              <div class="chat-card" key={`card-${convIndex}-${msgIndex}-${cardIndex}`}>
-                <h4>{card.title || "Untitled Product"}</h4>
-                <img src={card.imageUrl || ""} alt={card.title?.text || "Image"} />
-                <a href={card.url || "#"} target="_blank" rel="noopener noreferrer">
+              <div
+                class="chat-card"
+                key={`card-${convIndex}-${msgIndex}-${cardIndex}`}
+              >
+                <h4>
+                  {card.title?.text
+                    ? card.title.text
+                    : card.title
+                    ? card.title
+                    : "Untitled Product"}
+                </h4>
+                <img
+                  src={card.imageUrl || ""}
+                  alt={card.title?.text || "Image"}
+                />
+                <a
+                  href={card.url || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   View Product
                 </a>
-                <p class="price">
-                  {card.variants?.[0]?.price ? `Price: Rs. ${card.variants[0].price}` : ""}
-                </p>
+                
               </div>
             );
           });
@@ -156,7 +177,10 @@ export class MyComponent {
           // Handle other message types
           if (isGrouping) {
             groupedMessages.push(
-              <div class="chat-card-group" key={`group-${groupedMessages.length}`}>
+              <div
+                class="chat-card-group"
+                key={`group-${groupedMessages.length}`}
+              >
                 {currentGroup}
               </div>
             );
@@ -173,7 +197,10 @@ export class MyComponent {
             );
           } else if (msg.type === "image") {
             groupedMessages.push(
-              <div class="chat-message image" key={`image-${convIndex}-${msgIndex}`}>
+              <div
+                class="chat-message image"
+                key={`image-${convIndex}-${msgIndex}`}
+              >
                 <img src={msg.content} alt="Image message" />
               </div>
             );
@@ -183,7 +210,10 @@ export class MyComponent {
 
       if (messageType === "photo-search" && photoSearchImage) {
         groupedMessages.push(
-          <div class="chat-message photo-search" key={`photo-search-${convIndex}`}>
+          <div
+            class="chat-message photo-search"
+            key={`photo-search-${convIndex}`}
+          >
             <img src={photoSearchImage} alt="Photo search result" />
           </div>
         );

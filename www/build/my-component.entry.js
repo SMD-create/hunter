@@ -28,7 +28,7 @@ const MyComponent = class {
         }
     }
     render() {
-        return (h("div", { key: '4736ad1a605e2cce44264c5aa87d980196295676', class: "chat-container" }, h("div", { key: '25437bb4dd95064ce0b4488f7e605ec9f1a0f8af', class: "chat-header" }, "Timmy AI"), h("div", { key: '2aaa307061f0510845da7803976fffa42b7320ab', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
+        return (h("div", { key: 'f4bc4d8eb1891f33f5c6ebbe236cb19278c2c5bd', class: "chat-container" }, h("div", { key: '4e6874d417c6fa6175d66167c8dc4b1ee4ef3613', class: "chat-header" }, "Timmy AI"), h("div", { key: '226e9927658054493872036522105aa6359eb867', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
     }
     renderBundleMessages(cards) {
         return (h("div", { class: "bundle-container" }, h("h4", null, "Here's your bundle!"), cards.map((card, index) => {
@@ -46,7 +46,8 @@ const MyComponent = class {
             const { messageType, photoSearchImage, messages } = conversation;
             messages.forEach((msg, msgIndex) => {
                 var _a;
-                if (msg.type === "card" || (msg.type === "unknown" && ((_a = msg.content) === null || _a === void 0 ? void 0 : _a.cards))) {
+                if (msg.type === "card" ||
+                    (msg.type === "unknown" && ((_a = msg.content) === null || _a === void 0 ? void 0 : _a.cards))) {
                     // Handle grouping for cards
                     if (!isGrouping) {
                         isGrouping = true;
@@ -54,8 +55,12 @@ const MyComponent = class {
                     }
                     const cards = msg.type === "card" ? [msg.content] : msg.content.cards;
                     cards.forEach((card, cardIndex) => {
-                        var _a, _b, _c;
-                        currentGroup.push(h("div", { class: "chat-card", key: `card-${convIndex}-${msgIndex}-${cardIndex}` }, h("h4", null, card.title || "Untitled Product"), h("img", { src: card.imageUrl || "", alt: ((_a = card.title) === null || _a === void 0 ? void 0 : _a.text) || "Image" }), h("a", { href: card.url || "#", target: "_blank", rel: "noopener noreferrer" }, "View Product"), h("p", { class: "price" }, ((_c = (_b = card.variants) === null || _b === void 0 ? void 0 : _b[0]) === null || _c === void 0 ? void 0 : _c.price) ? `Price: Rs. ${card.variants[0].price}` : "")));
+                        var _a, _b;
+                        currentGroup.push(h("div", { class: "chat-card", key: `card-${convIndex}-${msgIndex}-${cardIndex}` }, h("h4", null, ((_a = card.title) === null || _a === void 0 ? void 0 : _a.text)
+                            ? card.title.text
+                            : card.title
+                                ? card.title
+                                : "Untitled Product"), h("img", { src: card.imageUrl || "", alt: ((_b = card.title) === null || _b === void 0 ? void 0 : _b.text) || "Image" }), h("a", { href: card.url || "#", target: "_blank", rel: "noopener noreferrer" }, "View Product")));
                     });
                 }
                 else if (msg.type === "bundle") {
