@@ -2,9 +2,9 @@ import { Component, JSX, State, h } from "@stencil/core";
 
 interface ChatMessage {
   type: "text" | "card" | "image" | "bundle" | "photo-search" | "unknown";
-  content: any; // Varies based on type
+  content: any;
   isAIReply?: boolean;
-  cards?: Array<BundleCard>; // Optional cards property for 'bundle' messages
+  cards?: Array<BundleCard>;
 }
 
 interface BundleCard {
@@ -23,9 +23,9 @@ interface BundleCard {
 }
 
 interface Conversation {
-  messageType: string; // e.g., 'photo-search'
-  photoSearchImage?: string; // Optional for photo search images
-  messages: ChatMessage[]; // Messages for this conversation
+  messageType: string;
+  photoSearchImage?: string;
+  messages: ChatMessage[];
 }
 
 @Component({
@@ -56,136 +56,6 @@ export class MyComponent {
     }
   }
 
-  private renderBundleMessages(cards: BundleCard[]) {
-    return (
-      <div class="bundle-container">
-        <h4>Your Bundle</h4>
-        {cards.map((card, index) => (
-          <div class="bundle-item" key={`bundle-card-${index}`}>
-            <div class="bundle-content">
-              {/* Product Image */}
-              <img
-                src={card.imageUrl}
-                alt={card.title.text}
-                class="bundle-item-image"
-              />
-              {/* Product Details */}
-              <div class="bundle-item-details">
-                <h5 class="bundle-item-title">{card.title.text}</h5>
-                <p class="bundle-item-purpose">
-                  {card.purpose || "No description available."}
-                </p>
-                <span class="bundle-item-price">
-                  Rs. {card.variants?.[0]?.price || "N/A"}
-                </span>
-              </div>
-            </div>
-            {index < cards.length - 1 && <hr class="bundle-separator" />}
-          </div>
-        ))}
-        {/* Total Price */}
-        <div class="bundle-total">
-          <strong>Total:</strong>{" "}
-          Rs.{" "}
-          {cards.reduce(
-            (total, card) =>
-              total + parseFloat(card.variants?.[0]?.price || "0"),
-            0
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  private renderCardMessages(cards: any[]) {
-    return cards.map((card, index) => (
-      <div class="chat-card" key={`card-${index}`}>
-        <h4>{card.title?.text || "Untitled Card"}</h4>
-        <img
-          src={card.imageUrl || ""}
-          alt={card.title?.text || "Image"}
-          class="card-image"
-        />
-        {card.url && (
-          <a
-            href={card.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="card-link"
-          >
-            View Product
-          </a>
-        )}
-      </div>
-    ));
-  }
-
-  private renderTextMessage(msg: ChatMessage, key: string) {
-    return (
-      <div
-        class={`chat-message ${msg.isAIReply ? "ai" : "user"}`}
-        key={key}
-      >
-        {msg.content}
-      </div>
-    );
-  }
-
-  private renderImageMessage(msg: ChatMessage, key: string) {
-    return (
-      <div class="chat-message image" key={key}>
-        <img src={msg.content} alt="Image message" />
-      </div>
-    );
-  }
-
-  private renderUnknownMessage(msg: ChatMessage, key: string) {
-    if (msg.content?.type === "bundle") {
-      return (
-        <div class={`chat-bundle user`} key={key}> {/* Add 'user' class to align to the right */}
-          {this.renderBundleMessages(msg.content.cards || [])}
-        </div>
-      );
-    }
-    return (
-      <div class="chat-message unknown user" key={key}> {/* Add 'user' class here as well */}
-        <pre>{JSON.stringify(msg.content, null, 2)}</pre>
-      </div>
-    );
-  }
-
-  private renderChatMessages() {
-    return this.chatMessages.map((conversation, convIndex) => (
-      <div class="conversation" key={`conv-${convIndex}`}>
-        {conversation.messages.map((msg, msgIndex) => {
-          const key = `msg-${convIndex}-${msgIndex}`;
-          switch (msg.type) {
-            case "text":
-              return this.renderTextMessage(msg, key);
-            case "image":
-              return this.renderImageMessage(msg, key);
-            case "card":
-              return <div class="chat-card-group">{this.renderCardMessages([msg.content])}</div>;
-            case "bundle":
-              return (
-                <div class="chat-bundle" key={key}>
-                  {this.renderBundleMessages(msg.cards || [])}
-                </div>
-              );
-            case "unknown":
-              return this.renderUnknownMessage(msg, key);
-            default:
-              return (
-                <div class="chat-message unhandled" key={key}>
-                  Unhandled message type: {msg.type}
-                </div>
-              );
-          }
-        })}
-      </div>
-    ));
-  }
-
   render() {
     return (
       <div class="chat-container">
@@ -201,5 +71,133 @@ export class MyComponent {
         </div>
       </div>
     );
+  }
+
+  private renderBundleMessages(cards: BundleCard[]) {
+    return (
+      <div class="bundle-container">
+        <h4>Here's your bundle!</h4>
+        {cards.map((card, index) => (
+          <div class="bundle-item" key={`bundle-${index}`}>
+            <img
+              src={card.imageUrl}
+              alt={card.title.text || "Untitled Product"}
+              class="bundle-item-image"
+            />
+            <div class="bundle-item-details">
+              <h5 class="bundle-item-title">{card.title.text || "Untitled Product"}</h5>
+              <p class="bundle-item-purpose">
+                {card.purpose || "No description available."}
+              </p>
+              <div class="bundle-item-price">
+                <span class="original-price">
+                  {card.variants?.[0]?.originalPrice
+                    ? `Rs. ${card.variants[0].originalPrice}`
+                    : ""}
+                </span>
+                <span class="final-price">Rs. {card.variants?.[0]?.price || "N/A"}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+        <div class="bundle-total">
+          <span>Total ({cards.length})</span>
+          <span>
+            Rs.{" "}
+            {cards.reduce(
+              (total, item) =>
+                total + parseFloat(item.variants?.[0]?.price || "0"),
+              0
+            )}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  private renderChatMessages() {
+    const groupedMessages: JSX.Element[] = [];
+    let currentGroup: JSX.Element[] = [];
+    let isGrouping = false;
+
+    this.chatMessages.forEach((conversation, convIndex) => {
+      const { messageType, photoSearchImage, messages } = conversation;
+
+      messages.forEach((msg, msgIndex) => {
+        if (msg.type === "card" || (msg.type === "unknown" && msg.content?.cards)) {
+          // Handle grouping for cards
+          if (!isGrouping) {
+            isGrouping = true;
+            currentGroup = [];
+          }
+          const cards = msg.type === "card" ? [msg.content] : msg.content.cards;
+          cards.forEach((card, cardIndex) => {
+            currentGroup.push(
+              <div class="chat-card" key={`card-${convIndex}-${msgIndex}-${cardIndex}`}>
+                <h4>{card.title || "Untitled Product"}</h4>
+                <img src={card.imageUrl || ""} alt={card.title?.text || "Image"} />
+                <a href={card.url || "#"} target="_blank" rel="noopener noreferrer">
+                  View Product
+                </a>
+                <p class="price">
+                  {card.variants?.[0]?.price ? `Price: Rs. ${card.variants[0].price}` : ""}
+                </p>
+              </div>
+            );
+          });
+        } else if (msg.type === "bundle") {
+          // Render bundle messages
+          groupedMessages.push(
+            <div class="chat-bundle" key={`bundle-${convIndex}-${msgIndex}`}>
+              {this.renderBundleMessages(msg.cards || [])}
+            </div>
+          );
+        } else {
+          // Handle other message types
+          if (isGrouping) {
+            groupedMessages.push(
+              <div class="chat-card-group" key={`group-${groupedMessages.length}`}>
+                {currentGroup}
+              </div>
+            );
+            isGrouping = false;
+          }
+          if (msg.type === "text") {
+            groupedMessages.push(
+              <div
+                class={`chat-message ${msg.isAIReply ? "ai" : "user"}`}
+                key={`text-${convIndex}-${msgIndex}`}
+              >
+                {msg.content}
+              </div>
+            );
+          } else if (msg.type === "image") {
+            groupedMessages.push(
+              <div class="chat-message image" key={`image-${convIndex}-${msgIndex}`}>
+                <img src={msg.content} alt="Image message" />
+              </div>
+            );
+          }
+        }
+      });
+
+      if (messageType === "photo-search" && photoSearchImage) {
+        groupedMessages.push(
+          <div class="chat-message photo-search" key={`photo-search-${convIndex}`}>
+            <img src={photoSearchImage} alt="Photo search result" />
+          </div>
+        );
+      }
+    });
+
+    if (isGrouping) {
+      groupedMessages.push(
+        <div class="chat-card-group" key={`group-${groupedMessages.length}`}>
+          {currentGroup}
+        </div>
+      );
+    }
+
+    return groupedMessages;
   }
 }

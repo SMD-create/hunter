@@ -28,12 +28,8 @@ export declare class MyComponent {
     isLoading: boolean;
     errorMessage: string | null;
     componentWillLoad(): Promise<void>;
-    private renderBundleMessages;
-    private renderCardMessages;
-    private renderTextMessage;
-    private renderImageMessage;
-    private renderUnknownMessage;
-    private renderChatMessages;
     render(): any;
+    private renderBundleMessages;
+    private renderChatMessages;
 }
 export {};
