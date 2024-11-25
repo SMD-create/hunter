@@ -151,14 +151,16 @@
   align-items: center;     /* Center the image vertically */
   padding: 10px;
   align-self: flex-end;    /* Align to the user's side */
+  
 }
 
 .chat-message.photo-search img {
-  width: 300px;            /* Set a fixed width */
-  height: auto;            /* Maintain aspect ratio */
-  border-radius: 8px;      /* Add rounding if desired */
-  object-fit: cover;       /* Cover the area while maintaining aspect ratio */
+  width: 80px;       /* Set fixed width to 80px */
+  height: 80px;      /* Set fixed height to 80px */
+  border-radius: 8px; /* Add rounding if desired */
+  object-fit: cover; /* Ensure the image fits the dimensions properly */
 }
+
 
 /* Styling for bundle messages */
 .chat-bundle {
