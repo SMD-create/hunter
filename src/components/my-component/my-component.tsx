@@ -1,3 +1,4 @@
+//src/components/my-component/my-component.tsx
 import { Component, JSX, State, h } from "@stencil/core";
 
 interface ChatMessage {
