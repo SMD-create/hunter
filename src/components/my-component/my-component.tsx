@@ -39,10 +39,21 @@ export class MyComponent {
   @State() errorMessage: string | null = null;
 
   async componentWillLoad() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+    const storeId = urlParams.get("storeId");
+
+    if (!id || !storeId) {
+      this.errorMessage = "Missing required parameters: id or storeId";
+      this.isLoading = false;
+      return;
+    }
+
     try {
       const response = await fetch(
-        "https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation"
+        `/api/conversation?id=${encodeURIComponent(id)}&storeId=${encodeURIComponent(storeId)}`
       );
+
       if (response.ok) {
         const data = await response.json();
         this.chatMessages = data.chat || [];
