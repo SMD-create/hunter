@@ -31,7 +31,7 @@ app.get("/api/conversation", async (req, res) => {
 
   try {
     // Construct the external API URL dynamically based on `id` and `storeId`
-    const externalApiUrl = `https://chateasy.logbase.io/api/conversation?id=${id}&storeId=${storeId}`;
+    const externalApiUrl = `https://chateasy.logbase.io/api/conversation?id=${encodeURIComponent(id)}&storeId=${encodeURIComponent(storeId)}`;
 
     const response = await fetch(externalApiUrl);
 
@@ -41,76 +41,78 @@ app.get("/api/conversation", async (req, res) => {
 
     const data = await response.json();
 
-    if (!data.conversation) {
+    if (!data.conversation || !Array.isArray(data.conversation)) {
       return res.status(500).json({ error: "No conversation found" });
     }
 
     // Preserve the original nested structure of the conversation
     const formattedMessages = data.conversation.map((convoItem) => {
-      const { messageType, messages, photoSearchImage } = convoItem;
+      const { messageType, messages, photoSearchImage, id, title } = convoItem;
 
-      const formattedInnerMessages = messages.map((message) => {
-        if (message.type === "card" && Array.isArray(message.cards)) {
-          return message.cards.map((card) => ({
-            type: "card",
-            content: {
-              title: card.title?.text || "",
-              description: card.description || "",
-              imageUrl: card.imageUrl || "",
-              productUrl: card.url || "",
-              price: card.filteredVariant?.price || "",
-            },
-            isAIReply: message.isAIReply || false,
-          }));
-        } else if (message.imageUrl) {
-          return {
-            type: "image",
-            content: message.imageUrl,
-            productUrl:
-              message.buttons?.find((button) => button.type === "openUrl")
-                ?.url || "",
-            isAIReply: message.isAIReply || false,
-          };
-        } else if (message.message) {
-          const formattedMessage = message.message
-            .replace(/<\/?[^>]+(>|$)/g, "") // Remove HTML tags
-            .replace(/&quot;/g, '"')
-            .replace(/&#39;/g, "'")
-            .replace(/\ \"/g, " ")
-            .replace(/\"/g, "")
-            .replace(/\n/g, " "); // Remove newlines
+      const formattedInnerMessages = messages
+        .map((message) => {
+          if (message.type === "card" && Array.isArray(message.cards)) {
+            return message.cards.map((card) => ({
+              type: "card",
+              content: {
+                title: card.title?.text || "",
+                description: card.description || "",
+                imageUrl: card.imageUrl || "",
+                productUrl: card.url || "",
+                price: card.filteredVariant?.price || "",
+              },
+              isAIReply: message.isAIReply || false,
+            }));
+          } else if (message.imageUrl) {
+            return {
+              type: "image",
+              content: message.imageUrl,
+              productUrl:
+                message.buttons?.find((button) => button.type === "openUrl")
+                  ?.url || "",
+              isAIReply: message.isAIReply || false,
+            };
+          } else if (message.message) {
+            const formattedMessage = message.message
+              .replace(/<\/?[^>]+(>|$)/g, "") // Remove HTML tags
+              .replace(/&quot;/g, '"')
+              .replace(/&#39;/g, "'")
+              .replace(/\ \\"/g, " ")
+              .replace(/\"/g, "")
+              .replace(/\n/g, " "); // Remove newlines
 
-          return {
-            type: "text",
-            content: formattedMessage,
-            isAIReply: message.isAIReply || false,
-          };
-        } else if (message.type === "unknown" && Array.isArray(message.cards)) {
-          return message.cards.map((card) => ({
-            type: "unknown",
-            content: {
-              title: card.title?.text || "",
-              purpose: card.purpose || "",
-              imageUrl: card.imageUrl || "",
-              productUrl: card.url || "",
-              price: card.filteredVariant?.price || "",
-            },
-          }));
-        } else {
-          return {
-            type: "unknown",
-            content: message,
-            isAIReply: message.isAIReply || false,
-          };
-        }
-      }).flat();
+            return {
+              type: "text",
+              content: formattedMessage,
+              isAIReply: message.isAIReply || false,
+            };
+          } else if (message.type === "unknown" && Array.isArray(message.cards)) {
+            return message.cards.map((card) => ({
+              type: "unknown",
+              content: {
+                title: card.title?.text || "",
+                purpose: card.purpose || "",
+                imageUrl: card.imageUrl || "",
+                productUrl: card.url || "",
+                price: card.filteredVariant?.price || "",
+              },
+            }));
+          } else {
+            return {
+              type: "unknown",
+              content: message,
+              isAIReply: message.isAIReply || false,
+            };
+          }
+        })
+        .flat();
 
       return {
         messageType,
         photoSearchImage,
         messages: formattedInnerMessages,
-        id: convoItem.id,
-        title: convoItem.title,
+        id,
+        title,
       };
     });
 

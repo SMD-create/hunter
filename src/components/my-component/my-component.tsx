@@ -42,21 +42,38 @@ export class MyComponent {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
     const storeId = urlParams.get("storeId");
-  
+
     if (!id || !storeId) {
       this.errorMessage = "Missing required parameters: id or storeId";
       this.isLoading = false;
       return;
     }
-  
+
+    // Check localStorage for saved data
+    const savedData = localStorage.getItem("chatData");
+    const savedId = localStorage.getItem("chatId");
+    const savedStoreId = localStorage.getItem("chatStoreId");
+
+    if (savedData && savedId === id && savedStoreId === storeId) {
+      this.chatMessages = JSON.parse(savedData);
+      this.isLoading = false;
+      return;
+    }
+
+    // Fetch new data if not found or parameters changed
     try {
       const response = await fetch(
         `/conversation?id=${encodeURIComponent(id)}&storeId=${encodeURIComponent(storeId)}`
       );
-  
+
       if (response.ok) {
         const data = await response.json();
         this.chatMessages = data.chat || [];
+
+        // Save data in localStorage
+        localStorage.setItem("chatData", JSON.stringify(this.chatMessages));
+        localStorage.setItem("chatId", id);
+        localStorage.setItem("chatStoreId", storeId);
       } else {
         this.errorMessage = "Failed to load chat messages.";
       }
@@ -66,7 +83,6 @@ export class MyComponent {
       this.isLoading = false;
     }
   }
-  
 
   render() {
     return (
