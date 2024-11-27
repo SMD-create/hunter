@@ -19,8 +19,15 @@ app.get('/', (req, res) => {
 
 // Route to fetch conversation from external API
 app.get('/api/conversation', async (req, res) => {
+  const { conversationId, storeId } = req.query;
+
+  // Validate that the required query parameters are provided
+  if (!conversationId || !storeId) {
+    return res.status(400).json({ error: "Missing required parameters: conversationId and storeId" });
+  }
+
   try {
-    const apiUrl = 'https://chateasy.logbase.io/api/conversation?id=85febd80c829ad30c9ca3672e8afbcc1699b39bd0e6d59d34bed6c5c9b5878c4&storeId=hobbyco1935.myshopify.com';
+    const apiUrl = `https://chateasy.logbase.io/api/conversation?id=${conversationId}&storeId=${storeId}`;
 
     const response = await fetch(apiUrl);
     const data = await response.json();
@@ -36,7 +43,6 @@ app.get('/api/conversation', async (req, res) => {
     const formattedMessages = data.conversation.map(convoItem => {
       const { messageType, messages, photoSearchImage } = convoItem;
 
-      // Preserve the inner structure and format messages accordingly
       const formattedInnerMessages = messages.map(message => {
         if (message.type === 'card' && Array.isArray(message.cards)) {
           return message.cards.map(card => ({
@@ -83,7 +89,6 @@ app.get('/api/conversation', async (req, res) => {
             },
           }));
         } else {
-          // Handle cases where none of the above conditions match
           return {
             type: 'unknown',
             content: message,
@@ -92,7 +97,6 @@ app.get('/api/conversation', async (req, res) => {
         }
       }).flat();
 
-      // Return the preserved nested structure
       return {
         messageType,
         photoSearchImage,
@@ -102,13 +106,13 @@ app.get('/api/conversation', async (req, res) => {
       };
     });
 
-    // Return the nested structure in response
     res.json({ chat: formattedMessages });
   } catch (error) {
     console.error('Error fetching conversation:', error);
     res.status(500).json({ error: 'Failed to fetch conversation' });
   }
 });
+
 
 // Run the server locally
 app.listen(PORT, () => {

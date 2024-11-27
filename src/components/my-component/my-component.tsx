@@ -41,9 +41,13 @@ export class MyComponent {
 
   async componentWillLoad() {
     try {
+      const conversationId = "85febd80c829ad30c9ca3672e8afbcc1699b39bd0e6d59d34bed6c5c9b5878c4"; // Replace with dynamic value
+      const storeId = "hobbyco1935.myshopify.com"; // Replace with dynamic value
+  
       const response = await fetch(
-        "https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation"
+        `https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation?conversationId=${conversationId}&storeId=${storeId}`
       );
+  
       if (response.ok) {
         const data = await response.json();
         this.chatMessages = data.chat || [];
@@ -56,6 +60,7 @@ export class MyComponent {
       this.isLoading = false;
     }
   }
+  
 
   render() {
     return (
