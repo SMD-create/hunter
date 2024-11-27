@@ -41,13 +41,16 @@ export class MyComponent {
 
   async componentWillLoad() {
     try {
-      const conversationId = "85febd80c829ad30c9ca3672e8afbcc1699b39bd0e6d59d34bed6c5c9b5878c4"; // Replace with dynamic value
-      const storeId = "hobbyco1935.myshopify.com"; // Replace with dynamic value
-  
+      const conversationId =
+        "85febd80c829ad30c9ca3672e8afbcc1699b39bd0e6d59d34bed6c5c9b5878c4"; // Dynamic value
+      const storeId = "hobbyco1935.myshopify.com"; // Dynamic value
+
       const response = await fetch(
-        `https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation?conversationId=${conversationId}&storeId=${storeId}`
+        `https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation?conversationId=${encodeURIComponent(
+          conversationId
+        )}&storeId=${encodeURIComponent(storeId)}`
       );
-  
+
       if (response.ok) {
         const data = await response.json();
         this.chatMessages = data.chat || [];
@@ -60,7 +63,6 @@ export class MyComponent {
       this.isLoading = false;
     }
   }
-  
 
   render() {
     return (
@@ -112,15 +114,14 @@ export class MyComponent {
         <div class="bundle-total">
           <span>Total ({cards.length})</span>
           <span>
-            ₹{
-              cards
-                .reduce(
-                  (total, item) =>
-                    total + parseFloat(item.variants[0]?.price || "0"),
-                  0
-                )
-                .toFixed(2)
-            }
+            ₹
+            {cards
+              .reduce(
+                (total, item) =>
+                  total + parseFloat(item.variants[0]?.price || "0"),
+                0
+              )
+              .toFixed(2)}
           </span>
         </div>
       </div>
@@ -137,7 +138,11 @@ export class MyComponent {
 
       messages.forEach((msg, msgIndex) => {
         if (msg.type === "unknown") {
-          if (msg.content && msg.content.type === "bundle" && msg.content.cards) {
+          if (
+            msg.content &&
+            msg.content.type === "bundle" &&
+            msg.content.cards
+          ) {
             groupedMessages.push(
               <div
                 class="chat-message unknown"
@@ -161,9 +166,7 @@ export class MyComponent {
                 class="chat-card"
                 key={`card-${convIndex}-${msgIndex}-${cardIndex}`}
               >
-                <h4>
-                  {card.title?.text || card.title || "Untitled Product"}
-                </h4>
+                <h4>{card.title?.text || card.title || "Untitled Product"}</h4>
                 <img
                   src={card.imageUrl || ""}
                   alt={card.title?.text || "Image"}
@@ -188,7 +191,10 @@ export class MyComponent {
         } else {
           if (isGrouping) {
             groupedMessages.push(
-              <div class="chat-card-group" key={`group-${groupedMessages.length}`}>
+              <div
+                class="chat-card-group"
+                key={`group-${groupedMessages.length}`}
+              >
                 {currentGroup}
               </div>
             );
@@ -250,4 +256,4 @@ export class MyComponent {
 
     return groupedMessages;
   }
-} 
+}
