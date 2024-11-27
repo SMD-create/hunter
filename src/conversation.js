@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 import serverless from 'serverless-http';
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Make sure the port is set to 3000
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
@@ -18,14 +18,26 @@ app.get('/', (req, res) => {
 
 // Route to fetch conversation from external API
 app.get('/api/conversation', async (req, res) => {
+  const { id, storeId } = req.query;
+
+  if (!id || !storeId) {
+    return res.status(400).json({
+      error: 'Missing required query parameters: id or storeId',
+      details: 'Please provide both `id` and `storeId` as query parameters.',
+    });
+  }
+
   try {
-    const apiUrl = 'https://chateasy.logbase.io/api/conversation?id=85febd80c829ad30c9ca3672e8afbcc1699b39bd0e6d59d34bed6c5c9b5878c4&storeId=hobbyco1935.myshopify.com';
+    // Construct the external API URL dynamically based on `id` and `storeId`
+    const externalApiUrl = `https://chateasy.logbase.io/api/conversation?id=${id}&storeId=${storeId}`;
 
-    const response = await fetch(apiUrl);
+    const response = await fetch(externalApiUrl);
+
+    if (!response.ok) {
+      throw new Error(`External API error: ${response.statusText}`);
+    }
+
     const data = await response.json();
-
-    // Log the full response for debugging
-    console.log('Full API response:', JSON.stringify(data, null, 2));
 
     if (!data.conversation) {
       return res.status(500).json({ error: 'No conversation found' });
@@ -35,7 +47,6 @@ app.get('/api/conversation', async (req, res) => {
     const formattedMessages = data.conversation.map(convoItem => {
       const { messageType, messages, photoSearchImage } = convoItem;
 
-      // Preserve the inner structure and format messages accordingly
       const formattedInnerMessages = messages.map(message => {
         if (message.type === 'card' && Array.isArray(message.cards)) {
           return message.cards.map(card => ({
@@ -58,12 +69,12 @@ app.get('/api/conversation', async (req, res) => {
           };
         } else if (message.message) {
           const formattedMessage = message.message
-            .replace(/<\/?[^>]+(>|$)/g, '')  // Remove HTML tags
+            .replace(/<\/?[^>]+(>|$)/g, '') // Remove HTML tags
             .replace(/&quot;/g, '"')
             .replace(/&#39;/g, "'")
             .replace(/\ \"/g, ' ')
             .replace(/\"/g, '')
-            .replace(/\n/g, ' ');  // Remove newlines
+            .replace(/\n/g, ' '); // Remove newlines
 
           return {
             type: 'text',
@@ -82,7 +93,6 @@ app.get('/api/conversation', async (req, res) => {
             },
           }));
         } else {
-          // Handle cases where none of the above conditions match
           return {
             type: 'unknown',
             content: message,
@@ -91,7 +101,6 @@ app.get('/api/conversation', async (req, res) => {
         }
       }).flat();
 
-      // Return the preserved nested structure
       return {
         messageType,
         photoSearchImage,
@@ -104,8 +113,8 @@ app.get('/api/conversation', async (req, res) => {
     // Return the nested structure in response
     res.json({ chat: formattedMessages });
   } catch (error) {
-    console.error('Error fetching conversation:', error);
-    res.status(500).json({ error: 'Failed to fetch conversation' });
+    console.error('Error fetching conversation:', error.message);
+    res.status(500).json({ error: 'Failed to fetch conversation', details: error.message });
   }
 });
 
@@ -115,5 +124,5 @@ app.listen(PORT, () => {
 });
 
 // Export the app as a serverless function for Vercel (optional, if deploying)
-export default app; 
+export default app;
 export const handler = serverless(app);
