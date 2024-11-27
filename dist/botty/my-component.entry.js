@@ -28,13 +28,15 @@ const MyComponent = class {
         }
     }
     render() {
-        return (h("div", { key: '4736ad1a605e2cce44264c5aa87d980196295676', class: "chat-container" }, h("div", { key: '25437bb4dd95064ce0b4488f7e605ec9f1a0f8af', class: "chat-header" }, "Timmy AI"), h("div", { key: '2aaa307061f0510845da7803976fffa42b7320ab', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
+        return (h("div", { key: '5b4f404ba256842d7d62dc279677bb5d1107d793', class: "chat-container" }, h("div", { key: '76bf2b3f2641cbfcc583ad0685bb3af474d339b4', class: "chat-header" }, "Timmy AI"), h("div", { key: '4a569b9162b6145c4b98d20ad7dbdc154ed30cfd', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
     }
     renderBundleMessages(cards) {
         return (h("div", { class: "bundle-container" }, h("h4", { class: "bundle-header" }, "Here's your bundle!"), cards.map((card, index) => {
             var _a;
-            return (h("div", { class: "bundle-item", key: `bundle-${index}` }, h("div", { class: "bundle-item-row" }, h("img", { src: card.imageUrl, alt: card.title.text || "Untitled Product", class: "bundle-item-image" }), h("div", { class: "bundle-item-details" }, h("h5", { class: "bundle-item-title" }, card.title.text), h("p", { class: "bundle-item-purpose" }, card.purpose), h("div", { class: "bundle-item-price" }, ((_a = card.variants[0]) === null || _a === void 0 ? void 0 : _a.originalPrice) && (h("span", { class: "original-price" }, "Rs. ", card.variants[0].originalPrice)), h("span", { class: "final-price" }, "Rs. ", card.variants[0].price)))), index < cards.length - 1 && h("div", { class: "divider" })));
-        }), h("div", { class: "bundle-total" }, h("span", null, "Total (", cards.length, ")"), h("span", null, "Rs.", " ", cards.reduce((total, item) => { var _a; return total + parseFloat(((_a = item.variants[0]) === null || _a === void 0 ? void 0 : _a.price) || "0"); }, 0)))));
+            return (h("div", { class: "bundle-item", key: `bundle-${index}` }, h("div", { class: "bundle-item-row" }, h("img", { src: card.imageUrl, alt: card.title.text || "Untitled Product", class: "bundle-item-image" }), h("div", { class: "bundle-item-details" }, h("h5", { class: "bundle-item-title" }, card.title.text), h("p", { class: "bundle-item-purpose" }, card.purpose), h("div", { class: "bundle-item-price" }, ((_a = card.variants[0]) === null || _a === void 0 ? void 0 : _a.originalPrice) && (h("span", { class: "original-price" }, "\u20B9 ", parseFloat(card.variants[0].originalPrice).toFixed(2))), h("span", { class: "final-price" }, "\u20B9 ", parseFloat(card.variants[0].price).toFixed(2))))), index < cards.length - 1 && h("div", { class: "divider" })));
+        }), h("div", { class: "bundle-total" }, h("span", null, "Total (", cards.length, ")"), h("span", null, "\u20B9", " ", cards
+            .reduce((total, item) => { var _a; return total + parseFloat(((_a = item.variants[0]) === null || _a === void 0 ? void 0 : _a.price) || "0"); }, 0)
+            .toFixed(2)))));
     }
     renderChatMessages() {
         const groupedMessages = [];

@@ -91,13 +91,14 @@ export class MyComponent {
                 <div class="bundle-item-price">
                   {card.variants[0]?.originalPrice && (
                     <span class="original-price">
-                      Rs. {card.variants[0].originalPrice}
+                      ₹ {parseFloat(card.variants[0].originalPrice).toFixed(2)}
                     </span>
                   )}
-                  <span class="final-price">Rs. {card.variants[0].price}</span>
+                  <span class="final-price">
+                  ₹ {parseFloat(card.variants[0].price).toFixed(2)}
+                  </span>
                 </div>
               </div>
-              
             </div>
             {index < cards.length - 1 && <div class="divider"></div>}
           </div>
@@ -105,17 +106,20 @@ export class MyComponent {
         <div class="bundle-total">
           <span>Total ({cards.length})</span>
           <span>
-            Rs.{" "}
-            {cards.reduce(
-              (total, item) =>
-                total + parseFloat(item.variants[0]?.price || "0"),
-              0
-            )}
+          ₹{" "}
+            {cards
+              .reduce(
+                (total, item) =>
+                  total + parseFloat(item.variants[0]?.price || "0"),
+                0
+              )
+              .toFixed(2)}
           </span>
         </div>
       </div>
     );
   }
+  
   
   
 
