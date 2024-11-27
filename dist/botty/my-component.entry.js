@@ -28,13 +28,13 @@ const MyComponent = class {
         }
     }
     render() {
-        return (h("div", { key: '4736ad1a605e2cce44264c5aa87d980196295676', class: "chat-container" }, h("div", { key: '25437bb4dd95064ce0b4488f7e605ec9f1a0f8af', class: "chat-header" }, "Timmy AI"), h("div", { key: '2aaa307061f0510845da7803976fffa42b7320ab', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
+        return (h("div", { key: 'a8528557241daed400d2f7e9f5d1feac8885aa99', class: "chat-container" }, h("div", { key: 'eb62a3c5a53b33919f88b15e50b3c1f4a0a0440d', class: "chat-header" }, "Timmy AI"), h("div", { key: 'f3f331ac9e013ff3cb2ff5d13ee8205aa26c48b0', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
     }
     renderBundleMessages(cards) {
         return (h("div", { class: "bundle-container" }, h("h4", { class: "bundle-header" }, "Here's your bundle!"), cards.map((card, index) => {
             var _a;
             return (h("div", { class: "bundle-item", key: `bundle-${index}` }, h("div", { class: "bundle-item-row" }, h("img", { src: card.imageUrl, alt: card.title.text || "Untitled Product", class: "bundle-item-image" }), h("div", { class: "bundle-item-details" }, h("h5", { class: "bundle-item-title" }, card.title.text), h("p", { class: "bundle-item-purpose" }, card.purpose), h("div", { class: "bundle-item-price" }, ((_a = card.variants[0]) === null || _a === void 0 ? void 0 : _a.originalPrice) && (h("span", { class: "original-price" }, "\u20B9 ", parseFloat(card.variants[0].originalPrice).toFixed(2))), h("span", { class: "final-price" }, "\u20B9 ", parseFloat(card.variants[0].price).toFixed(2))))), index < cards.length - 1 && h("div", { class: "divider" })));
-        }), h("div", { class: "bundle-total" }, h("span", null, "Total (", cards.length, ")"), h("span", null, "\u20B9", " ", cards
+        }), h("div", { class: "bundle-total" }, h("span", null, "Total (", cards.length, ")"), h("span", null, "\u20B9", cards
             .reduce((total, item) => { var _a; return total + parseFloat(((_a = item.variants[0]) === null || _a === void 0 ? void 0 : _a.price) || "0"); }, 0)
             .toFixed(2)))));
     }
@@ -47,13 +47,11 @@ const MyComponent = class {
             messages.forEach((msg, msgIndex) => {
                 var _a;
                 if (msg.type === "unknown") {
-                    // Handle unknown types
                     if (msg.content && msg.content.type === "bundle" && msg.content.cards) {
                         groupedMessages.push(h("div", { class: "chat-message unknown", key: `unknown-${convIndex}-${msgIndex}` }, h("div", { class: "message-content" }, this.renderBundleMessages(msg.content.cards))));
                     }
                 }
                 else if (msg.type === "card") {
-                    // Grouping logic for cards
                     if (!isGrouping) {
                         isGrouping = true;
                         currentGroup = [];
@@ -61,21 +59,15 @@ const MyComponent = class {
                     const cards = msg.type === "card" ? [msg.content] : msg.content.cards;
                     cards.forEach((card, cardIndex) => {
                         var _a, _b;
-                        currentGroup.push(h("div", { class: "chat-card", key: `card-${convIndex}-${msgIndex}-${cardIndex}` }, h("h4", null, ((_a = card.title) === null || _a === void 0 ? void 0 : _a.text)
-                            ? card.title.text
-                            : card.title
-                                ? card.title
-                                : "Untitled Product"), h("img", { src: card.imageUrl || "", alt: ((_b = card.title) === null || _b === void 0 ? void 0 : _b.text) || "Image" }), h("a", { href: card.url || "#", target: "_blank", rel: "noopener noreferrer" }, "View Product")));
+                        currentGroup.push(h("div", { class: "chat-card", key: `card-${convIndex}-${msgIndex}-${cardIndex}` }, h("h4", null, ((_a = card.title) === null || _a === void 0 ? void 0 : _a.text) || card.title || "Untitled Product"), h("img", { src: card.imageUrl || "", alt: ((_b = card.title) === null || _b === void 0 ? void 0 : _b.text) || "Image" }), h("a", { href: card.url || "#", target: "_blank", rel: "noopener noreferrer" }, "View Product")));
                     });
                 }
                 else if (((_a = msg.content) === null || _a === void 0 ? void 0 : _a.type) === "bundle") {
                     groupedMessages.push(h("div", { class: "chat-bundle", key: `bundle-${convIndex}-${msgIndex}` }, this.renderBundleMessages(msg.cards || [])));
                 }
                 else if (messageType === "photo-search" && msg.type === "text") {
-                    // Do not process text messages separately for photo-search
                 }
                 else {
-                    // Handle other message types
                     if (isGrouping) {
                         groupedMessages.push(h("div", { class: "chat-card-group", key: `group-${groupedMessages.length}` }, currentGroup));
                         isGrouping = false;
@@ -88,10 +80,8 @@ const MyComponent = class {
                     }
                 }
             });
-            // Render photo-search image and its text together
             if (messageType === "photo-search" && photoSearchImage) {
                 groupedMessages.push(h("div", { class: "chat-message photo-search", key: `photo-search-${convIndex}` }, h("img", { src: photoSearchImage, alt: "Photo search result" })));
-                // Add text message associated with the photo-search image
                 const textMessage = messages.find((msg) => msg.type === "text");
                 if (textMessage) {
                     groupedMessages.push(h("div", { class: `chat-message ${textMessage.isAIReply ? "ai" : "user"}`, key: `photo-search-text-${convIndex}` }, textMessage.content));

@@ -39,41 +39,13 @@ export class MyComponent {
   @State() errorMessage: string | null = null;
 
   async componentWillLoad() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
-    const storeId = urlParams.get("storeId");
-
-    if (!id || !storeId) {
-      this.errorMessage = "Missing required parameters: id or storeId";
-      this.isLoading = false;
-      return;
-    }
-
-    // Check localStorage for saved data
-    const savedData = localStorage.getItem("chatData");
-    const savedId = localStorage.getItem("chatId");
-    const savedStoreId = localStorage.getItem("chatStoreId");
-
-    if (savedData && savedId === id && savedStoreId === storeId) {
-      this.chatMessages = JSON.parse(savedData);
-      this.isLoading = false;
-      return;
-    }
-
-    // Fetch new data if not found or parameters changed
     try {
       const response = await fetch(
-        `/conversation?id=${encodeURIComponent(id)}&storeId=${encodeURIComponent(storeId)}`
+        "https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation"
       );
-
       if (response.ok) {
         const data = await response.json();
         this.chatMessages = data.chat || [];
-
-        // Save data in localStorage
-        localStorage.setItem("chatData", JSON.stringify(this.chatMessages));
-        localStorage.setItem("chatId", id);
-        localStorage.setItem("chatStoreId", storeId);
       } else {
         this.errorMessage = "Failed to load chat messages.";
       }
@@ -123,7 +95,7 @@ export class MyComponent {
                     </span>
                   )}
                   <span class="final-price">
-                  ₹ {parseFloat(card.variants[0].price).toFixed(2)}
+                    ₹ {parseFloat(card.variants[0].price).toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -134,34 +106,31 @@ export class MyComponent {
         <div class="bundle-total">
           <span>Total ({cards.length})</span>
           <span>
-          ₹{" "}
-            {cards
-              .reduce(
-                (total, item) =>
-                  total + parseFloat(item.variants[0]?.price || "0"),
-                0
-              )
-              .toFixed(2)}
+            ₹{
+              cards
+                .reduce(
+                  (total, item) =>
+                    total + parseFloat(item.variants[0]?.price || "0"),
+                  0
+                )
+                .toFixed(2)
+            }
           </span>
         </div>
       </div>
     );
   }
-  
-  
-  
 
   private renderChatMessages() {
     const groupedMessages: JSX.Element[] = [];
     let currentGroup: JSX.Element[] = [];
     let isGrouping = false;
-  
+
     this.chatMessages.forEach((conversation, convIndex) => {
       const { messageType, photoSearchImage, messages } = conversation;
-  
+
       messages.forEach((msg, msgIndex) => {
         if (msg.type === "unknown") {
-          // Handle unknown types
           if (msg.content && msg.content.type === "bundle" && msg.content.cards) {
             groupedMessages.push(
               <div
@@ -175,7 +144,6 @@ export class MyComponent {
             );
           }
         } else if (msg.type === "card") {
-          // Grouping logic for cards
           if (!isGrouping) {
             isGrouping = true;
             currentGroup = [];
@@ -188,11 +156,7 @@ export class MyComponent {
                 key={`card-${convIndex}-${msgIndex}-${cardIndex}`}
               >
                 <h4>
-                  {card.title?.text
-                    ? card.title.text
-                    : card.title
-                    ? card.title
-                    : "Untitled Product"}
+                  {card.title?.text || card.title || "Untitled Product"}
                 </h4>
                 <img
                   src={card.imageUrl || ""}
@@ -215,9 +179,7 @@ export class MyComponent {
             </div>
           );
         } else if (messageType === "photo-search" && msg.type === "text") {
-          // Do not process text messages separately for photo-search
         } else {
-          // Handle other message types
           if (isGrouping) {
             groupedMessages.push(
               <div class="chat-card-group" key={`group-${groupedMessages.length}`}>
@@ -247,8 +209,7 @@ export class MyComponent {
           }
         }
       });
-  
-      // Render photo-search image and its text together
+
       if (messageType === "photo-search" && photoSearchImage) {
         groupedMessages.push(
           <div
@@ -258,8 +219,7 @@ export class MyComponent {
             <img src={photoSearchImage} alt="Photo search result" />
           </div>
         );
-  
-        // Add text message associated with the photo-search image
+
         const textMessage = messages.find((msg) => msg.type === "text");
         if (textMessage) {
           groupedMessages.push(
@@ -273,7 +233,7 @@ export class MyComponent {
         }
       }
     });
-  
+
     if (isGrouping) {
       groupedMessages.push(
         <div class="chat-card-group" key={`group-${groupedMessages.length}`}>
@@ -281,9 +241,7 @@ export class MyComponent {
         </div>
       );
     }
-  
+
     return groupedMessages;
   }
-  
-  
-}
+} 
