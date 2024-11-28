@@ -1,4 +1,11 @@
-<!doctype html><html dir="ltr" lang="en"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <title>Stencil Component Starter</title> <script type="module" src="/build/botty.esm.js" data-stencil></script> <script nomodule="" src="/build/botty.js" data-stencil></script> </head> <body> <my-component first="Stencil" middle=",'A really efficient'," last="'Don't call me a framework' JS"></my-component> <script>
+<!doctype html><html dir="ltr" lang="en"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <title>Stencil Component Starter</title> <script type="module" src="/build/botty.esm.js" data-stencil></script> <script nomodule="" src="/build/botty.js" data-stencil></script> <style>html {
+        overflow: hidden; /* Prevent scrolling on the entire page */
+      }
+      body {
+        margin: 0; /* Remove default body margin */
+        height: 100vh; /* Set body height to the viewport height */
+        width: 100vw; /* Set body width to the viewport width */
+      }</style> </head> <body> <my-component first="Stencil" middle=",'A really efficient'," last="'Don't call me a framework' JS"></my-component> <script>
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   // auto-unregister service worker during dev mode
   navigator.serviceWorker.getRegistration().then(function(registration) {

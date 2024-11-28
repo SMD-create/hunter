@@ -1,3 +1,14 @@
+html.hydrated {
+  overflow: hidden;
+}
+
+body {
+  overflow: hidden; /* Prevent scrolling on the body */
+  margin: 0; /* Ensure no default margin affects the layout */
+  height: 100vh; /* Ensure the body takes the full viewport height */
+  width: 100vw; /* Ensure the body takes the full viewport width */
+}
+
 /* General styling for the host element */
 :host {
   display: flex;
@@ -8,6 +19,7 @@
   height: 100vh;
   margin: 0;
   background-color: #f0f2f5;
+  
 }
 
 /* Chat container styling */
@@ -116,34 +128,45 @@
 
 .chat-card img {
   max-width: 100%;
-  height: auto;
+  height: 200px;
+  width: 200px;
   border-radius: 6px;
   margin: 5px 0;
   object-fit: contain;
 }
 
-.chat-card h4 {
-  margin: 5px 0;
-  font-size: 0.9em;
-  font-weight: 600;
-  color: #333;
+
+.chat-content {
+  display: flex;
+  width:100%;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+  flex-grow: 1;
   text-align: center;
+  background-color: #f9f9f9;
 }
 
-.chat-card a {
-  margin-top: 5px;
-  padding: 6px 12px;
-  background-color: #007bff;
-  color: white;
-  border-radius: 6px;
+.chat-content h4 {
+  font-size: 16px;
+  margin: 10px 0 5px; /* Adjust spacing as needed */
+  color: #333;
+}
+
+.chat-content a {
   text-decoration: none;
-  font-size: 0.9em;
-  font-weight: bold;
+  color: #007bff;
+  font-size: 14px;
+  transition: color 0.3s, background-color 0.3s;
+  padding: 5px 10px;
+  border-radius: 4px;
 }
 
-.chat-card a:hover {
-  background-color: #0056b3;
+.chat-content a:hover {
+  color: #fff; /* Changes font color to white */
+  background-color: #007bff; /* Adds a background to highlight the link */
 }
+
 
 /* Photo search message styling */
 .chat-message.photo-search {

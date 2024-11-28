@@ -47,7 +47,8 @@ export class MyComponent {
 
       // Validate the parameters
       if (!conversationId || !storeId) {
-        this.errorMessage = "Missing required parameters: conversationId or storeId.";
+        this.errorMessage =
+          "Missing required parameters: conversationId or storeId.";
         this.isLoading = false;
         return;
       }
@@ -174,18 +175,22 @@ export class MyComponent {
                 class="chat-card"
                 key={`card-${convIndex}-${msgIndex}-${cardIndex}`}
               >
-                <h4>{card.title?.text || card.title || "Untitled Product"}</h4>
                 <img
                   src={card.imageUrl || ""}
                   alt={card.title?.text || "Image"}
                 />
-                <a
-                  href={card.url || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View Product
-                </a>
+                <div class='chat-content'>
+                  <h4>
+                    {card.title?.text || card.title || "Untitled Product"}
+                  </h4>
+                  <a
+                    href={card.url || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View Product
+                  </a>
+                </div>
               </div>
             );
           });

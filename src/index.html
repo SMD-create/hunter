@@ -7,6 +7,17 @@
 
     <script type="module" src="/build/botty.esm.js"></script>
     <script nomodule src="/build/botty.js"></script>
+
+    <style>
+      html {
+        overflow: hidden; /* Prevent scrolling on the entire page */
+      }
+      body {
+        margin: 0; /* Remove default body margin */
+        height: 100vh; /* Set body height to the viewport height */
+        width: 100vw; /* Set body width to the viewport width */
+      }
+    </style>
   </head>
   <body>
     <my-component first="Stencil" middle=",'A really efficient'," last="'Don't call me a framework' JS"></my-component>
