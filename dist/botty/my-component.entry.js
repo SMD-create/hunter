@@ -11,7 +11,9 @@ const MyComponent = class {
     }
     async componentWillLoad() {
         try {
-            const response = await fetch("https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation");
+            const conversationId = "85febd80c829ad30c9ca3672e8afbcc1699b39bd0e6d59d34bed6c5c9b5878c4"; // Dynamic value
+            const storeId = "hobbyco1935.myshopify.com"; // Dynamic value
+            const response = await fetch(`https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation?conversationId=${encodeURIComponent(conversationId)}&storeId=${encodeURIComponent(storeId)}`);
             if (response.ok) {
                 const data = await response.json();
                 this.chatMessages = data.chat || [];
@@ -28,7 +30,7 @@ const MyComponent = class {
         }
     }
     render() {
-        return (h("div", { key: 'c3bb4db749599aeea7b3fde88bc32cbc657e3a8e', class: "chat-container" }, h("div", { key: 'd8137fc6b2188a09ced105cce913ebd769fbae67', class: "chat-header" }, "Timmy AI"), h("div", { key: 'b8a4fb85d9d9cc96664787f5a9c65443476148bf', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
+        return (h("div", { key: '63b442b251c700e874c0e6cca2868857b4add977', class: "chat-container" }, h("div", { key: '7a195e1ed300cef626a033474aafbe257be5ab61', class: "chat-header" }, "Timmy AI"), h("div", { key: 'f26f67b95d06d9159218715734e48eda8cf617d1', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
     }
     renderBundleMessages(cards) {
         return (h("div", { class: "bundle-container" }, h("h4", { class: "bundle-header" }, "Here's your bundle!"), cards.map((card, index) => {
@@ -47,7 +49,9 @@ const MyComponent = class {
             messages.forEach((msg, msgIndex) => {
                 var _a;
                 if (msg.type === "unknown") {
-                    if (msg.content && msg.content.type === "bundle" && msg.content.cards) {
+                    if (msg.content &&
+                        msg.content.type === "bundle" &&
+                        msg.content.cards) {
                         groupedMessages.push(h("div", { class: "chat-message unknown", key: `unknown-${convIndex}-${msgIndex}` }, h("div", { class: "message-content" }, this.renderBundleMessages(msg.content.cards))));
                     }
                 }
