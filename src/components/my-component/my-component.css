@@ -71,7 +71,7 @@ body {
 .chat-message.ai {
   background-color: #f2f2f2;
   align-self: flex-start;
-  border: 1px solid #b3e5fc;
+  border: 1px solid #b5b5b5;
 }
 
 .chat-message.user {
