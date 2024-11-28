@@ -39,7 +39,7 @@ const MyComponent = class {
         }
     }
     render() {
-        return (h("div", { key: 'c042935ab722db283dbee1856793083a91fd4a69', class: "chat-container" }, h("div", { key: '0a6acfe34710703a467cb51fcd551698777ef139', class: "chat-header" }, "Timmy AI"), h("div", { key: '26411115a4cf04715fbe84f8a901945d57426e46', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
+        return (h("div", { key: '9584655a1b640cc8c735c2347ffc6191fa1bfd60', class: "chat-container" }, h("div", { key: '196d33296469171fc1eb8e986cfaffc0989b9973', class: "chat-header" }, "Timmy AI"), h("div", { key: '4ac71ee019298bf9bd179037a98733366b70aa09', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
     }
     renderBundleMessages(cards) {
         return (h("div", { class: "bundle-container" }, h("h4", { class: "bundle-header" }, "Here's your bundle!"), cards.map((card, index) => {
