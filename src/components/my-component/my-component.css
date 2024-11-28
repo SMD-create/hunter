@@ -141,10 +141,9 @@ body {
   width:100%;
   flex-direction: column;
   justify-content: center;
-  padding: 10px;
   flex-grow: 1;
   text-align: center;
-  background-color: #f9f9f9;
+  background-color: #dfe3f6;
 }
 
 .chat-content h4 {

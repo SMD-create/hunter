@@ -76,7 +76,7 @@ export class MyComponent {
   render() {
     return (
       <div class="chat-container">
-        <div class="chat-header">Timmy AI</div>
+        <div class="chat-header">AskTimmy.ai</div>
         <div class="chat-messages">
           {this.isLoading ? (
             <div class="loading">Loading messages...</div>
