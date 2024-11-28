@@ -61,7 +61,7 @@ body {
 .chat-message {
   padding: 15px;
   border-radius: 12px;
-  max-width: 80%;
+  max-width: 60%;
   position: relative;
   font-size: 1em;
   line-height: 1.4;
@@ -90,8 +90,8 @@ body {
   padding: 10px;
   background-color: #ffffff;
   border: 1px solid #ddd;
-  min-height: 380px; /* Ensure it doesn't shrink smaller than the card height */
-  max-height: 380px; /* Prevent it from expanding beyond the card height */
+  min-height: 350px; /* Ensure it doesn't shrink smaller than the card height */
+  max-height: 350px; /* Prevent it from expanding beyond the card height */
   box-sizing: border-box;
 }
 
@@ -234,7 +234,7 @@ body {
 .chat-message.unknown {
   background: #f8f8f8;
   border: 1px solid #ccc;
-  padding: 20px; /* Reduced padding */
+  padding: 10px; /* Reduced padding */
   margin: 5px 0; /* Reduced margin */
   font-size: 14px; /* Optionally adjust the font size */
   border-radius: 5px; /* Optional: Add rounded corners for a softer look */
