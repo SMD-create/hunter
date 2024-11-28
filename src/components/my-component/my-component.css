@@ -61,7 +61,7 @@ body {
 .chat-message {
   padding: 15px;
   border-radius: 12px;
-  max-width: 60%;
+  max-width: 80%;
   position: relative;
   font-size: 1em;
   line-height: 1.4;
