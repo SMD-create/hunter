@@ -169,7 +169,9 @@ export class MyComponent {
             currentGroup = [];
           }
           const cards = msg.type === "card" ? [msg.content] : msg.content.cards;
+
           cards.forEach((card, cardIndex) => {
+            console.log("Product URL:", card.content.productUrl);
             currentGroup.push(
               <div
                 class="chat-card"
@@ -179,12 +181,12 @@ export class MyComponent {
                   src={card.imageUrl || ""}
                   alt={card.title?.text || "Image"}
                 />
-                <div class='chat-content'>
+                <div class="chat-content">
                   <h4>
                     {card.title?.text || card.title || "Untitled Product"}
                   </h4>
                   <a
-                    href={card.url || "#"}
+                    href={card.content.productUrl || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

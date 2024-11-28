@@ -28,7 +28,7 @@ body {
   flex-direction: column;
   width: 90%;
   max-width: 900px;
-  height: 80%;
+  height: 90%;
   max-height: 620px;
   background-color: #ffffff;
   border-radius: 15px;
@@ -158,7 +158,7 @@ body {
   color: #007bff;
   font-size: 14px;
   transition: color 0.3s, background-color 0.3s;
-  padding: 5px 10px;
+  padding: 10px 10px;
   border-radius: 4px;
 }
 
@@ -234,9 +234,13 @@ body {
 .chat-message.unknown {
   background: #f8f8f8;
   border: 1px solid #ccc;
-  padding: 30px;
-  margin: 10px 0;
+  padding: 20px; /* Reduced padding */
+  margin: 5px 0; /* Reduced margin */
+  font-size: 14px; /* Optionally adjust the font size */
+  border-radius: 5px; /* Optional: Add rounded corners for a softer look */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
 }
+
 
 .chat-message.image img {
   max-width: 100%;
