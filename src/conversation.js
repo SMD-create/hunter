@@ -51,7 +51,7 @@ app.get('/api/conversation', async (req, res) => {
               title: card.title?.text || '',
               description: card.description || '',
               imageUrl: card.imageUrl || '',
-              productUrl: card.url || '',
+              productUrl: card.productUrl || '',
               price: card.filteredVariant?.price || '',
             },
             isAIReply: message.isAIReply || false,
@@ -84,7 +84,7 @@ app.get('/api/conversation', async (req, res) => {
               title: card.title?.text || '',
               purpose: card.purpose || '',
               imageUrl: card.imageUrl || '',
-              productUrl: card.url || '',
+              productUrl: card.productUrl || '',
               price: card.filteredVariant?.price || '',
             },
           }));

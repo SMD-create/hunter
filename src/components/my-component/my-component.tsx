@@ -174,7 +174,7 @@ export class MyComponent {
           const cards = msg.type === "card" ? [msg.content] : msg.content.cards;
           
           cards.forEach((card, cardIndex) => {
-            console.log('Product URL:', card.url);
+            console.log('Product URL:', card.productUrl);
             console.log('Card:', card);
 
             currentGroup.push(
@@ -192,7 +192,7 @@ export class MyComponent {
                   </h4>
                   
                   <a
-                    href={card.url ? card.url : "#"}
+                    href={card.productUrl ? card.productUrl : "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     class="view-product-link"
