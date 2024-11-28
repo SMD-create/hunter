@@ -54,7 +54,7 @@ body {
   background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
 /* Chat message styling (both AI and user messages) */
