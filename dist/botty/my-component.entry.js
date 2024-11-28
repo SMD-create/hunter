@@ -73,8 +73,9 @@ const MyComponent = class {
                     const cards = msg.type === "card" ? [msg.content] : msg.content.cards;
                     cards.forEach((card, cardIndex) => {
                         var _a, _b;
-                        console.log("Product URL:", card.content.productUrl);
-                        currentGroup.push(h("div", { class: "chat-card", key: `card-${convIndex}-${msgIndex}-${cardIndex}` }, h("img", { src: card.imageUrl || "", alt: ((_a = card.title) === null || _a === void 0 ? void 0 : _a.text) || "Image" }), h("div", { class: "chat-content" }, h("h4", null, ((_b = card.title) === null || _b === void 0 ? void 0 : _b.text) || card.title || "Untitled Product"), h("a", { href: card.content.productUrl || "#", target: "_blank", rel: "noopener noreferrer" }, "View Product"))));
+                        console.log('Product URL:', card.url);
+                        console.log('Card:', card);
+                        currentGroup.push(h("div", { class: "chat-card", key: `card-${convIndex}-${msgIndex}-${cardIndex}` }, h("img", { src: card.imageUrl || "", alt: ((_a = card.title) === null || _a === void 0 ? void 0 : _a.text) || "Image" }), h("div", { class: "chat-content" }, h("h4", null, ((_b = card.title) === null || _b === void 0 ? void 0 : _b.text) || card.title || "Untitled Product"), h("a", { href: card.url ? card.url : "#", target: "_blank", rel: "noopener noreferrer", class: "view-product-link" }, "View Product"))));
                     });
                 }
                 else if (((_a = msg.content) === null || _a === void 0 ? void 0 : _a.type) === "bundle") {

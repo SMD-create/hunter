@@ -137,7 +137,10 @@ export class MyComponent {
     );
   }
 
+  
+
   private renderChatMessages() {
+    
     const groupedMessages: JSX.Element[] = [];
     let currentGroup: JSX.Element[] = [];
     let isGrouping = false;
@@ -169,9 +172,11 @@ export class MyComponent {
             currentGroup = [];
           }
           const cards = msg.type === "card" ? [msg.content] : msg.content.cards;
-
+          
           cards.forEach((card, cardIndex) => {
-            console.log("Product URL:", card.content.productUrl);
+            console.log('Product URL:', card.url);
+            console.log('Card:', card);
+
             currentGroup.push(
               <div
                 class="chat-card"
@@ -185,10 +190,12 @@ export class MyComponent {
                   <h4>
                     {card.title?.text || card.title || "Untitled Product"}
                   </h4>
+                  
                   <a
-                    href={card.content.productUrl || "#"}
+                    href={card.url ? card.url : "#"}
                     target="_blank"
                     rel="noopener noreferrer"
+                    class="view-product-link"
                   >
                     View Product
                   </a>
