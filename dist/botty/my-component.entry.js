@@ -11,8 +11,17 @@ const MyComponent = class {
     }
     async componentWillLoad() {
         try {
-            const conversationId = "85febd80c829ad30c9ca3672e8afbcc1699b39bd0e6d59d34bed6c5c9b5878c4"; // Dynamic value
-            const storeId = "hobbyco1935.myshopify.com"; // Dynamic value
+            // Parse the query parameters from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const conversationId = urlParams.get("conversationId");
+            const storeId = urlParams.get("storeId");
+            // Validate the parameters
+            if (!conversationId || !storeId) {
+                this.errorMessage = "Missing required parameters: conversationId or storeId.";
+                this.isLoading = false;
+                return;
+            }
+            // Fetch data from the API
             const response = await fetch(`https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation?conversationId=${encodeURIComponent(conversationId)}&storeId=${encodeURIComponent(storeId)}`);
             if (response.ok) {
                 const data = await response.json();
@@ -30,7 +39,7 @@ const MyComponent = class {
         }
     }
     render() {
-        return (h("div", { key: '63b442b251c700e874c0e6cca2868857b4add977', class: "chat-container" }, h("div", { key: '7a195e1ed300cef626a033474aafbe257be5ab61', class: "chat-header" }, "Timmy AI"), h("div", { key: 'f26f67b95d06d9159218715734e48eda8cf617d1', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
+        return (h("div", { key: 'c042935ab722db283dbee1856793083a91fd4a69', class: "chat-container" }, h("div", { key: '0a6acfe34710703a467cb51fcd551698777ef139', class: "chat-header" }, "Timmy AI"), h("div", { key: '26411115a4cf04715fbe84f8a901945d57426e46', class: "chat-messages" }, this.isLoading ? (h("div", { class: "loading" }, "Loading messages...")) : this.errorMessage ? (h("div", { class: "error" }, this.errorMessage)) : (this.renderChatMessages()))));
     }
     renderBundleMessages(cards) {
         return (h("div", { class: "bundle-container" }, h("h4", { class: "bundle-header" }, "Here's your bundle!"), cards.map((card, index) => {

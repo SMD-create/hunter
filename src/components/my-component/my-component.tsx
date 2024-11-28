@@ -1,4 +1,3 @@
-//src/components/my-component/my-component.tsx
 import { Component, JSX, State, h } from "@stencil/core";
 
 interface ChatMessage {
@@ -41,10 +40,19 @@ export class MyComponent {
 
   async componentWillLoad() {
     try {
-      const conversationId =
-        "85febd80c829ad30c9ca3672e8afbcc1699b39bd0e6d59d34bed6c5c9b5878c4"; // Dynamic value
-      const storeId = "hobbyco1935.myshopify.com"; // Dynamic value
+      // Parse the query parameters from the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const conversationId = urlParams.get("conversationId");
+      const storeId = urlParams.get("storeId");
 
+      // Validate the parameters
+      if (!conversationId || !storeId) {
+        this.errorMessage = "Missing required parameters: conversationId or storeId.";
+        this.isLoading = false;
+        return;
+      }
+
+      // Fetch data from the API
       const response = await fetch(
         `https://timmy-io-smd-create-smd-creates-projects.vercel.app/api/conversation?conversationId=${encodeURIComponent(
           conversationId
