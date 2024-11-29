@@ -91,8 +91,8 @@ body {
   padding: 10px;
   background-color: #ffffff;
   border: 1px solid #ddd;
-  min-height: 350px; /* Ensure it doesn't shrink smaller than the card height */
-  max-height: 350px; /* Prevent it from expanding beyond the card height */
+  min-height: 362px; /* Ensure it doesn't shrink smaller than the card height */
+  max-height: 380px; /* Prevent it from expanding beyond the card height */
   box-sizing: border-box;
 }
 

@@ -190,6 +190,9 @@ export class MyComponent {
                   <h4>
                     {card.title?.text || card.title || "Untitled Product"}
                   </h4>
+                  <h4 class="product-price">
+                    Price: $ {parseFloat(card.price || "0").toFixed(2)}
+                  </h4>
 
                   <a
                     href={productUrl}
