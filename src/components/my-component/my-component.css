@@ -76,6 +76,7 @@ body {
 
 .chat-message.user {
   background-color: #8f4bd7;
+  color:#fff;
   align-self: flex-end;
   border: 1px solid #a478d4;
 }
